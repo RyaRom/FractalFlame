@@ -1,7 +1,7 @@
 package backend.academy.data.transformations;
 
-import backend.academy.data.ColorRGB;
-import backend.academy.data.Point;
+import backend.academy.data.image.RGB;
+import backend.academy.data.image.Point;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -18,11 +18,11 @@ public class AffineTransformation implements Transformation {
 
     private final double f;
 
-    private final ColorRGB colorRGB;
+    private final RGB rgb;
 
     @Override
-    public ColorRGB getColor() {
-        return colorRGB;
+    public RGB getColor() {
+        return rgb;
     }
 
     @Override

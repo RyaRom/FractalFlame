@@ -1,8 +1,9 @@
 package backend.academy.singlethreading;
 
-import backend.academy.data.ColorRGB;
-import backend.academy.data.Frame;
-import backend.academy.data.Pixel;
+import backend.academy.data.image.Frame;
+import backend.academy.data.image.ImageSettings;
+import backend.academy.data.image.Pixel;
+import backend.academy.data.image.RGB;
 import backend.academy.service.Renderer;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,14 +11,15 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+
 public class SingleThreadRenderer extends JFrame implements Renderer {
     private transient Frame frame;
 
     private transient BufferedImage image;
 
-    public SingleThreadRenderer(int height, int width) {
+    public SingleThreadRenderer(ImageSettings settings) {
         setTitle("Fractal Renderer");
-        setSize(width, height);
+        setSize(settings.widthRes(), settings.heightRes());
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -35,7 +37,7 @@ public class SingleThreadRenderer extends JFrame implements Renderer {
         for (int y = 0; y < frame.height(); y++) {
             for (int x = 0; x < frame.width(); x++) {
                 Pixel current = frame.getPixel(x, y);
-                ColorRGB rgb = current.colorRGB();
+                RGB rgb = current.rgb();
                 int color = new Color(rgb.red(), rgb.green(), rgb.blue()).getRGB();
                 image.setRGB(x, y, color);
             }

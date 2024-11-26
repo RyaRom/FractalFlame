@@ -1,4 +1,4 @@
-package backend.academy.data;
+package backend.academy.data.image;
 
 import backend.academy.data.transformations.Transformation;
 import java.util.List;
@@ -9,6 +9,7 @@ public record ImageSettings(
     int heightRes,
     int startingPoints,
     int iterationsForPoint,
+    int symmetry,
     List<Transformation> transformations
 ) {
     public Transformation getRandomTransformation() {

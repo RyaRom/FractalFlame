@@ -1,8 +1,10 @@
 package backend.academy.singlethreading;
 
-import backend.academy.data.ColorRGB;
-import backend.academy.data.ImageSettings;
+import backend.academy.data.image.ImageSettings;
+import backend.academy.data.image.RGB;
 import backend.academy.data.transformations.AffineTransformation;
+import backend.academy.data.transformations.SinusoidalTransformation;
+import backend.academy.data.transformations.SphereTransformation;
 import backend.academy.data.transformations.Transformation;
 import java.security.SecureRandom;
 import java.util.List;
@@ -12,13 +14,13 @@ public class Application {
 
     public void start() {
         List<Transformation> transformations = List.of(
-            new AffineTransformation(0.5, 0, 0, 0, 0.5, 0, new ColorRGB(255, 0, 0)),
-            new AffineTransformation(0.5, 0, 1, 0, 0.5, 0, new ColorRGB(0, 255, 0)),
-            new AffineTransformation(0.5, 0, -1, 0, 0.5, 0, new ColorRGB(0, 0, 255))
+            new AffineTransformation(0.7, 0.3, -0.5, -0.3, 0.7, 0.2, new RGB(255, 0, 0)),
+            new SinusoidalTransformation(new RGB(100, 100, 100)),
+            new SphereTransformation(new RGB(100, 100, 100))
         );
 
-        ImageSettings settings = new ImageSettings(600, 600, 10000, 5000, transformations);
-        SingleThreadRenderer renderer = new SingleThreadRenderer(600, 600);
+        ImageSettings settings = new ImageSettings(2000, 2000, 2000, 20000, 5, transformations);
+        SingleThreadRenderer renderer = new SingleThreadRenderer(settings);
         SingleThreadGenerator generator = new SingleThreadGenerator(renderer);
         generator.generate(settings);
     }

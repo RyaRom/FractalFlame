@@ -1,21 +1,23 @@
 package backend.academy.singlethreading;
 
+import backend.academy.data.image.Format;
 import backend.academy.data.image.Frame;
 import backend.academy.data.image.ImageSettings;
-import backend.academy.data.image.Pixel;
-import backend.academy.data.image.RGB;
 import backend.academy.service.Renderer;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+import lombok.extern.log4j.Log4j2;
 
-
+@Log4j2
 public class SingleThreadRenderer extends JFrame implements Renderer {
     private transient Frame frame;
-
-    private transient BufferedImage image;
 
     public SingleThreadRenderer(ImageSettings settings) {
         setTitle("Fractal Renderer");
@@ -27,22 +29,26 @@ public class SingleThreadRenderer extends JFrame implements Renderer {
     @Override
     public void update(Frame frame) {
         this.frame = frame;
-        if (image == null || image.getWidth() != frame.width() || image.getHeight() != frame.height()) {
-            image = new BufferedImage(frame.width(), frame.height(), BufferedImage.TYPE_INT_RGB);
-        }
         repaint();
     }
 
-    private void drawFractal(Graphics g) {
-        for (int y = 0; y < frame.height(); y++) {
-            for (int x = 0; x < frame.width(); x++) {
-                Pixel current = frame.getPixel(x, y);
-                RGB rgb = current.rgb();
-                int color = new Color(rgb.red(), rgb.green(), rgb.blue()).getRGB();
-                image.setRGB(x, y, color);
+    @Override
+    public void saveAs(Frame frame, String path, String name, Format format) {
+        BufferedImage image = frame.toBufferedImage();
+        String fullPath = path + "/" + name + "." + format.toString().toLowerCase();
+        try {
+            Files.createDirectories(Path.of(path));
+            File output = new File(fullPath);
+            if (!ImageIO.write(image, format.toString(), output)) {
+                log.error("Error saving fractal image {}", fullPath);
             }
+        } catch (IOException e) {
+            log.error("Error saving fractal image {} {}", fullPath, e);
         }
+    }
 
+    private void drawFractal(Graphics g) {
+        BufferedImage image = frame.toBufferedImage();
         g.drawImage(image, 0, 0, null);
     }
 

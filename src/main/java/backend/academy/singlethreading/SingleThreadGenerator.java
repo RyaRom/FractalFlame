@@ -33,7 +33,8 @@ public class SingleThreadGenerator implements ImageGenerator {
                 frame.applyTransformedPoint(transformed, settings.symmetry(), transformation.getColor());
             }
             if (i % 50 == 0) {
-                renderer.update(frame);
+                log.info("Point {} processed", i);
+//                renderer.update(frame);
             }
         }
         return frame;

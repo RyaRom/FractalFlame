@@ -1,5 +1,6 @@
 package backend.academy.data.image;
 
+import java.awt.image.BufferedImage;
 import static backend.academy.data.image.Coordinates.scale;
 
 public record Frame(
@@ -80,5 +81,17 @@ public record Frame(
     private boolean contains(Coordinates scaled) {
         return scaled.x() < width && scaled.x() >= 0
             && scaled.y() < height && scaled.y() >= 0;
+    }
+
+    public BufferedImage toBufferedImage() {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Pixel current = getPixel(x, y);
+                image.setRGB(x, y, current.rgb().toRGBInt());
+            }
+        }
+        return image;
     }
 }

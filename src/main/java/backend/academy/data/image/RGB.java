@@ -14,4 +14,8 @@ public record RGB(int red, int green, int blue) {
             (this.blue + other.blue()) / 2
         );
     }
+
+    public int toRGBInt() {
+        return (red << 16) | (green << 8) | blue;
+    }
 }

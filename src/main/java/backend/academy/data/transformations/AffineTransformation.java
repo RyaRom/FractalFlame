@@ -1,11 +1,11 @@
 package backend.academy.data.transformations;
 
-import backend.academy.data.image.RGB;
 import backend.academy.data.image.Point;
+import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class AffineTransformation implements Transformation {
+public final class AffineTransformation implements UnaryOperator<Point> {
     private final double a;
 
     private final double b;
@@ -17,13 +17,6 @@ public class AffineTransformation implements Transformation {
     private final double e;
 
     private final double f;
-
-    private final RGB rgb;
-
-    @Override
-    public RGB getColor() {
-        return rgb;
-    }
 
     @Override
     public Point apply(Point point) {

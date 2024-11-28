@@ -1,9 +1,15 @@
 package backend.academy.data.transformations;
 
-import backend.academy.data.image.RGB;
 import backend.academy.data.image.Point;
-import java.util.function.Function;
+import backend.academy.data.image.RGB;
+import java.util.function.UnaryOperator;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-public interface Transformation extends Function<Point, Point> {
-    RGB getColor();
+@RequiredArgsConstructor
+public abstract class Transformation implements UnaryOperator<Point> {
+    @Getter
+    private final RGB rgb;
+
+    protected final AffineTransformation affineTransformation;
 }

@@ -18,4 +18,12 @@ public record RGB(int red, int green, int blue) {
     public int toRGBInt() {
         return (red << 16) | (green << 8) | blue;
     }
+
+    public RGB gammaCorrected(double gamma, double normalized) {
+        return new RGB(
+            (int) (red * Math.pow(normalized, 1.0 / gamma)),
+            (int) (green * Math.pow(normalized, 1.0 / gamma)),
+            (int) (blue * Math.pow(normalized, 1.0 / gamma))
+        );
+    }
 }

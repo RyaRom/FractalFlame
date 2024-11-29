@@ -1,11 +1,10 @@
 package backend.academy.data.transformations;
 
 import backend.academy.data.image.Point;
-import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public final class AffineTransformation implements UnaryOperator<Point> {
+public final class AffineTransformation implements AbstractTransformation {
     private final double a;
 
     private final double b;
@@ -19,7 +18,7 @@ public final class AffineTransformation implements UnaryOperator<Point> {
     private final double f;
 
     @Override
-    public Point apply(Point point) {
+    public Point transform(Point point) {
         double newX = a * point.x() + b * point.y() + c;
         double newY = d * point.x() + e * point.y() + f;
         return new Point(newX, newY);

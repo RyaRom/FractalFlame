@@ -6,7 +6,9 @@ import backend.academy.data.image.ImageSettings;
 import backend.academy.data.image.Pixel;
 import backend.academy.data.image.Point;
 import backend.academy.data.image.RGB;
+import backend.academy.data.postprocessing.BlurCorrection;
 import backend.academy.data.postprocessing.GammaCorrection;
+import backend.academy.data.postprocessing.HeatMap;
 import backend.academy.service.ImageGenerator;
 import backend.academy.service.Renderer;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +41,12 @@ public class SingleThreadGenerator implements ImageGenerator {
             }
             if (i % 500 == 0) {
                 log.info("Point {} processed", i);
-//                renderer.update(frame);
+                renderer.update(frame);
             }
         }
         new GammaCorrection().accept(frame);
+//        new HeatMap().accept(frame);
+       new BlurCorrection().accept(frame);
         return frame;
     }
 

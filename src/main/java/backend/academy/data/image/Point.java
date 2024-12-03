@@ -9,4 +9,8 @@ public record Point(double x, double y) {
         double newY = x * Math.sin(theta) + y * Math.cos(theta);
         return new Point(newX, newY);
     }
+
+    public Point sum(Point other) {
+        return new Point(x + other.x(), y + other.y());
+    }
 }

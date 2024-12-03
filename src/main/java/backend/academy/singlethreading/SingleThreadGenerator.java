@@ -8,6 +8,7 @@ import backend.academy.data.image.Point;
 import backend.academy.data.image.RGB;
 import backend.academy.data.postprocessing.BlurCorrection;
 import backend.academy.data.postprocessing.GammaCorrection;
+import backend.academy.data.postprocessing.HeatMap;
 import backend.academy.service.ImageGenerator;
 import backend.academy.service.Renderer;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class SingleThreadGenerator implements ImageGenerator {
 
     @Override
     public Fractal generate(ImageSettings settings) {
-        Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes());
+        Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes(), 1.3);
 
         for (int i = 0; i < settings.startingPoints(); i++) {
             Point current = getRandomPoint(fractal);
@@ -44,7 +45,7 @@ public class SingleThreadGenerator implements ImageGenerator {
             }
         }
         new GammaCorrection().accept(fractal);
-//        new HeatMap().accept(frame);
+//        new HeatMap().accept(fractal);
         new BlurCorrection().accept(fractal);
         return fractal;
     }
@@ -57,12 +58,7 @@ public class SingleThreadGenerator implements ImageGenerator {
 
         Pixel hitPixel = fractal.getPixel(scaled);
         if (hitPixel.hitCount() > 0) {
-            if (!rgb.equals(hitPixel.rgb())) {
-//                log.info("old 1 RGB {}", rgb);
-//                log.info("old 2 RGB {}", hitPixel.rgb());
-                rgb = hitPixel.rgb().blend(rgb);
-//                log.info("blended RGB {}", rgb);
-            }
+            rgb = hitPixel.rgb().blend(rgb);
         }
         fractal.setPixel(
             scaled,

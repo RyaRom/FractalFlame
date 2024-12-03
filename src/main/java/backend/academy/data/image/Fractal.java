@@ -12,20 +12,20 @@ public record Fractal(
     double yMax
 ) {
 
-    public static Fractal of(int height, int width) {
+    public static Fractal of(int height, int width, double depth) {
         double aspectRatio = (double) width / height;
 
         double xMin, xMax, yMin, yMax;
         if (aspectRatio >= 1.0) {
-            xMin = -2.0 * aspectRatio;
-            xMax = 2.0 * aspectRatio;
-            yMin = -2.0;
-            yMax = 2.0;
+            xMin = -depth * aspectRatio;
+            xMax = depth * aspectRatio;
+            yMin = -depth;
+            yMax = depth;
         } else {
-            xMin = -2.0;
-            xMax = 2.0;
-            yMin = -2.0 / aspectRatio;
-            yMax = 2.0 / aspectRatio;
+            xMin = -depth;
+            xMax = depth;
+            yMin = -depth / aspectRatio;
+            yMax = depth / aspectRatio;
         }
         Pixel[][] pixels = new Pixel[height][width];
         for (int i = 0; i < height; i++) {

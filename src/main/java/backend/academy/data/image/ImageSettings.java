@@ -1,6 +1,6 @@
 package backend.academy.data.image;
 
-import backend.academy.data.transformations.Transformation;
+import backend.academy.data.transformations.IterativeFunction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,7 +12,7 @@ public record ImageSettings(
     int startingPoints,
     int iterationsForPoint,
     int symmetry,
-    List<Transformation> transformations,
+    List<IterativeFunction> iterativeFunctions,
     List<Double> prefixSumTransformations
 ) {
     public ImageSettings(
@@ -21,16 +21,17 @@ public record ImageSettings(
         int startingPoints,
         int iterationsForPoint,
         int symmetry,
-        List<Transformation> transformations
+        List<IterativeFunction> iterativeFunctions
     ) {
-        this(widthRes, heightRes, startingPoints, iterationsForPoint, symmetry, transformations, calculatePrefixSum(transformations));
+        this(widthRes, heightRes, startingPoints, iterationsForPoint, symmetry,
+            iterativeFunctions, calculatePrefixSum(iterativeFunctions));
     }
 
-    private static List<Double> calculatePrefixSum(List<Transformation> transformations) {
-        double sum = transformations.stream().mapToDouble(Transformation::weight).sum();
+    private static List<Double> calculatePrefixSum(List<IterativeFunction> iterativeFunctions) {
+        double sum = iterativeFunctions.stream().mapToDouble(IterativeFunction::weight).sum();
         List<Double> normalizedWeights = new ArrayList<>();
-        for (Transformation transformation : transformations) {
-            normalizedWeights.add(transformation.weight() / sum);
+        for (IterativeFunction iterativeFunction : iterativeFunctions) {
+            normalizedWeights.add(iterativeFunction.weight() / sum);
         }
 
         List<Double> cumulativeWeights = new ArrayList<>();
@@ -43,13 +44,13 @@ public record ImageSettings(
         return cumulativeWeights;
     }
 
-    public Transformation getRandomTransformation() {
+    public IterativeFunction getRandomTransformation() {
         double r = RANDOM.nextDouble();
         int index = Collections.binarySearch(prefixSumTransformations, r);
         if (index < 0) {
             index = -index - 1;
         }
 
-        return transformations.get(index);
+        return iterativeFunctions.get(index);
     }
 }

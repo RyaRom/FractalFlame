@@ -117,6 +117,14 @@ public record RGB(int red, int green, int blue) {
         this.blue = Math.clamp(blue, 0, 255);
     }
 
+    public RGB(double red, double green, double blue) {
+        this(
+            (int) (red * 255),
+            (int) (green * 255),
+            (int) (blue * 255)
+        );
+    }
+
     public RGB blend(RGB other) {
         return new RGB(
             (this.red + other.red()) / 2,

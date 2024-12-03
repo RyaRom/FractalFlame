@@ -6,11 +6,7 @@ import backend.academy.data.image.ImageSettings;
 import backend.academy.data.image.Pixel;
 import backend.academy.data.image.Point;
 import backend.academy.data.image.RGB;
-import backend.academy.data.postprocessing.BlurCorrection;
-import backend.academy.data.postprocessing.GammaCorrection;
-import backend.academy.data.postprocessing.HeatMap;
 import backend.academy.service.ImageGenerator;
-import backend.academy.service.Renderer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import static backend.academy.data.image.Coordinates.scale;
@@ -19,8 +15,6 @@ import static backend.academy.singlethreading.Application.RANDOM;
 @Log4j2
 @RequiredArgsConstructor
 public class SingleThreadGenerator implements ImageGenerator {
-    private final Renderer renderer;
-
     private static Point getRandomPoint(Fractal fractal) {
         double newX = RANDOM.nextDouble(fractal.xMin(), fractal.xMax());
         double newY = RANDOM.nextDouble(fractal.yMin(), fractal.yMax());
@@ -30,7 +24,7 @@ public class SingleThreadGenerator implements ImageGenerator {
 
     @Override
     public Fractal generate(ImageSettings settings) {
-        Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes(), 1.3);
+        Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes(), settings.zoom());
 
         for (int i = 0; i < settings.startingPoints(); i++) {
             Point current = getRandomPoint(fractal);
@@ -41,12 +35,8 @@ public class SingleThreadGenerator implements ImageGenerator {
             }
             if (i % 500 == 0) {
                 log.info("Point {} processed", i);
-//                renderer.update(fractal);
             }
         }
-        new GammaCorrection().accept(fractal);
-//        new HeatMap().accept(fractal);
-        new BlurCorrection().accept(fractal);
         return fractal;
     }
 

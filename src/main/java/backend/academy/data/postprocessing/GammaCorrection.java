@@ -5,7 +5,7 @@ import backend.academy.data.image.Pixel;
 
 public class GammaCorrection implements PostProcessing {
     @Override
-    public void accept(Fractal fractal) {
+    public void process(Fractal fractal) {
         double max = 0.0;
         double gamma = 2.2;
         for (int x = 0; x < fractal.width(); x++) {

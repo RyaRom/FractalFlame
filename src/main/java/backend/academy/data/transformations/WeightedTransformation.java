@@ -11,7 +11,7 @@ public abstract class WeightedTransformation implements AbstractTransformation {
 
     public static AbstractTransformation compose(
         AffineTransformation affineFunc,
-        WeightedTransformation... transformations
+        AbstractTransformation... transformations
     ) {
         if (transformations.length == 0) {
             return affineFunc;

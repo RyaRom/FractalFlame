@@ -20,7 +20,7 @@ public class IterativeFunction implements UnaryOperator<Point> {
         RGB rgb,
         AffineTransformation affineTransformation,
         Double weight,
-        WeightedTransformation... transformations
+        AbstractTransformation... transformations
     ) {
         this.rgb = rgb;
         this.weight = weight;

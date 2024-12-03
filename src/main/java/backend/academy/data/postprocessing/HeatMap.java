@@ -6,7 +6,7 @@ import backend.academy.data.image.RGB;
 
 public class HeatMap implements PostProcessing {
     @Override
-    public void accept(Fractal fractal) {
+    public void process(Fractal fractal) {
         for (int x = 0; x < fractal.width(); x++) {
             for (int y = 0; y < fractal.height(); y++) {
                 Pixel current = fractal.getPixel(x, y);

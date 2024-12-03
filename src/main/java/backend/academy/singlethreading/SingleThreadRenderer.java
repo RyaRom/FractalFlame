@@ -1,7 +1,7 @@
 package backend.academy.singlethreading;
 
 import backend.academy.data.image.Format;
-import backend.academy.data.image.Frame;
+import backend.academy.data.image.Fractal;
 import backend.academy.data.image.ImageSettings;
 import backend.academy.service.Renderer;
 import java.awt.Graphics;
@@ -17,7 +17,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class SingleThreadRenderer extends JFrame implements Renderer {
-    private transient Frame frame;
+    private transient Fractal fractal;
 
     public SingleThreadRenderer(ImageSettings settings) {
         setTitle("Fractal Renderer");
@@ -27,14 +27,14 @@ public class SingleThreadRenderer extends JFrame implements Renderer {
     }
 
     @Override
-    public void update(Frame frame) {
-        this.frame = frame;
+    public void update(Fractal fractal) {
+        this.fractal = fractal;
         repaint();
     }
 
     @Override
-    public void saveAs(Frame frame, String path, String name, Format format) {
-        BufferedImage image = frame.toBufferedImage();
+    public void saveAs(Fractal fractal, String path, String name, Format format) {
+        BufferedImage image = fractal.toBufferedImage();
         String fullPath = path + "/" + name + "." + format.toString().toLowerCase();
         try {
             Files.createDirectories(Path.of(path));
@@ -48,14 +48,14 @@ public class SingleThreadRenderer extends JFrame implements Renderer {
     }
 
     private void drawFractal(Graphics g) {
-        BufferedImage image = frame.toBufferedImage();
+        BufferedImage image = fractal.toBufferedImage();
         g.drawImage(image, 0, 0, null);
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        if (frame != null) {
+        if (fractal != null) {
             drawFractal(g);
         }
     }

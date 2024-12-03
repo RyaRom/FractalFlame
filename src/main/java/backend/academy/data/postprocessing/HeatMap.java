@@ -1,15 +1,15 @@
 package backend.academy.data.postprocessing;
 
-import backend.academy.data.image.Frame;
+import backend.academy.data.image.Fractal;
 import backend.academy.data.image.Pixel;
 import backend.academy.data.image.RGB;
 
 public class HeatMap implements PostProcessing {
     @Override
-    public void accept(Frame frame) {
-        for (int x = 0; x < frame.width(); x++) {
-            for (int y = 0; y < frame.height(); y++) {
-                Pixel current = frame.getPixel(x, y);
+    public void accept(Fractal fractal) {
+        for (int x = 0; x < fractal.width(); x++) {
+            for (int y = 0; y < fractal.height(); y++) {
+                Pixel current = fractal.getPixel(x, y);
                 RGB newColor = current.hitCount() == 0
                     ? new RGB(0, 0, 0) : interpolateColor(current.normal());
                 Pixel correctPixel = new Pixel(
@@ -17,7 +17,7 @@ public class HeatMap implements PostProcessing {
                     current.hitCount(),
                     current.normal()
                 );
-                frame.setPixel(x, y, correctPixel);
+                fractal.setPixel(x, y, correctPixel);
             }
         }
     }

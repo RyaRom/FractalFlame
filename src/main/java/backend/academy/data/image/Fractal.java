@@ -2,7 +2,7 @@ package backend.academy.data.image;
 
 import java.awt.image.BufferedImage;
 
-public record Frame(
+public record Fractal(
     Pixel[][] pixels,
     int width,
     int height,
@@ -11,26 +11,30 @@ public record Frame(
     double yMin,
     double yMax
 ) {
-    public Frame(int width, int height) {
-        this(
-            initPixels(width, height),
-            width,
-            height,
-            -2.0 * ((double) width / height) / 2,
-            2.0 * ((double) width / height) / 2,
-            -1.0,
-            1.0
-        );
-    }
 
-    private static Pixel[][] initPixels(int width, int height) {
+    public static Fractal of(int height, int width) {
+        double aspectRatio = (double) width / height;
+
+        double xMin, xMax, yMin, yMax;
+        if (aspectRatio >= 1.0) {
+            xMin = -2.0 * aspectRatio;
+            xMax = 2.0 * aspectRatio;
+            yMin = -2.0;
+            yMax = 2.0;
+        } else {
+            xMin = -2.0;
+            xMax = 2.0;
+            yMin = -2.0 / aspectRatio;
+            yMax = 2.0 / aspectRatio;
+        }
         Pixel[][] pixels = new Pixel[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 pixels[i][j] = new Pixel(new RGB(0, 0, 0), 0, 0.0);
             }
         }
-        return pixels;
+
+        return new Fractal(pixels, width, height, xMin, xMax, yMin, yMax);
     }
 
     public Pixel getPixel(Coordinates coordinates) {

@@ -1,8 +1,8 @@
 package backend.academy.data.postprocessing;
 
-import backend.academy.data.image.Frame;
+import backend.academy.data.image.Fractal;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface PostProcessing extends Consumer<Frame> {
+public interface PostProcessing extends Consumer<Fractal> {
 }

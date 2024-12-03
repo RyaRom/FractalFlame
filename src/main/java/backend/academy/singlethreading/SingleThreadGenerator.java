@@ -1,14 +1,13 @@
 package backend.academy.singlethreading;
 
 import backend.academy.data.image.Coordinates;
-import backend.academy.data.image.Frame;
+import backend.academy.data.image.Fractal;
 import backend.academy.data.image.ImageSettings;
 import backend.academy.data.image.Pixel;
 import backend.academy.data.image.Point;
 import backend.academy.data.image.RGB;
 import backend.academy.data.postprocessing.BlurCorrection;
 import backend.academy.data.postprocessing.GammaCorrection;
-import backend.academy.data.postprocessing.HeatMap;
 import backend.academy.service.ImageGenerator;
 import backend.academy.service.Renderer;
 import lombok.RequiredArgsConstructor;
@@ -21,59 +20,64 @@ import static backend.academy.singlethreading.Application.RANDOM;
 public class SingleThreadGenerator implements ImageGenerator {
     private final Renderer renderer;
 
-    private static Point getRandomPoint(Frame frame) {
-        double newX = RANDOM.nextDouble(frame.xMin(), frame.xMax());
-        double newY = RANDOM.nextDouble(frame.yMin(), frame.yMax());
+    private static Point getRandomPoint(Fractal fractal) {
+        double newX = RANDOM.nextDouble(fractal.xMin(), fractal.xMax());
+        double newY = RANDOM.nextDouble(fractal.yMin(), fractal.yMax());
 
         return new Point(newX, newY);
     }
 
     @Override
-    public Frame generate(ImageSettings settings) {
-        Frame frame = new Frame(settings.widthRes(), settings.heightRes());
+    public Fractal generate(ImageSettings settings) {
+        Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes());
 
         for (int i = 0; i < settings.startingPoints(); i++) {
-            Point current = getRandomPoint(frame);
-            for (int step = 0; step < settings.iterationsForPoint(); step++) {
+            Point current = getRandomPoint(fractal);
+            for (int step = -20; step < settings.iterationsForPoint(); step++) {
                 var transformation = settings.getRandomTransformation();
-                Point transformed = transformation.apply(current);
-                applyTransformedPoint(transformed, settings.symmetry(), transformation.rgb(), frame);
+                current = transformation.apply(current);
+                applyTransformedPoint(current, settings.symmetry(), transformation.rgb(), fractal);
             }
             if (i % 500 == 0) {
                 log.info("Point {} processed", i);
-                renderer.update(frame);
+//                renderer.update(fractal);
             }
         }
-        new GammaCorrection().accept(frame);
+        new GammaCorrection().accept(fractal);
 //        new HeatMap().accept(frame);
-       new BlurCorrection().accept(frame);
-        return frame;
+        new BlurCorrection().accept(fractal);
+        return fractal;
     }
 
-    private void hitPixel(Point position, RGB rgb, Frame frame) {
-        Coordinates scaled = scale(position, frame, 0.7);
-        if (!frame.contains(scaled)) {
+    private void hitPixel(Point position, RGB rgb, Fractal fractal) {
+        Coordinates scaled = scale(position, fractal, 1.0);
+        if (!fractal.contains(scaled)) {
             return;
         }
 
-        Pixel hitPixel = frame.getPixel(scaled);
+        Pixel hitPixel = fractal.getPixel(scaled);
         if (hitPixel.hitCount() > 0) {
-            rgb = hitPixel.rgb().blend(rgb);
+            if (!rgb.equals(hitPixel.rgb())) {
+//                log.info("old 1 RGB {}", rgb);
+//                log.info("old 2 RGB {}", hitPixel.rgb());
+                rgb = hitPixel.rgb().blend(rgb);
+//                log.info("blended RGB {}", rgb);
+            }
         }
-        frame.setPixel(
+        fractal.setPixel(
             scaled,
             new Pixel(rgb, hitPixel.hitCount() + 1, hitPixel.normal())
         );
     }
 
-    private void applyTransformedPoint(Point transformed, int symmetryCount, RGB rgb, Frame frame) {
+    private void applyTransformedPoint(Point transformed, int symmetryCount, RGB rgb, Fractal fractal) {
         double theta2 = 0.0;
         for (int sym = 0; sym < symmetryCount; theta2 += Math.PI * 2 / symmetryCount, sym++) {
             Point rotated = transformed.rotate(theta2);
-            if (!frame.containsUnscaled(transformed)) {
+            if (!fractal.containsUnscaled(transformed)) {
                 continue;
             }
-            hitPixel(rotated, rgb, frame);
+            hitPixel(rotated, rgb, fractal);
         }
     }
 }

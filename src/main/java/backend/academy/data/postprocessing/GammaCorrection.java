@@ -2,10 +2,14 @@ package backend.academy.data.postprocessing;
 
 import backend.academy.data.image.Fractal;
 import backend.academy.data.image.Pixel;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class GammaCorrection implements PostProcessing {
     @Override
     public void process(Fractal fractal) {
+        log.info("Start gamma correction");
+
         double max = 0.0;
         double gamma = 2.2;
         for (int x = 0; x < fractal.width(); x++) {
@@ -39,5 +43,6 @@ public class GammaCorrection implements PostProcessing {
                 fractal.setPixel(x, y, correctPixel);
             }
         }
+        log.info("End gamma correction");
     }
 }

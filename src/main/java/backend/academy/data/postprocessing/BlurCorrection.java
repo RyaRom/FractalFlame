@@ -3,15 +3,19 @@ package backend.academy.data.postprocessing;
 import backend.academy.data.image.Fractal;
 import backend.academy.data.image.Pixel;
 import backend.academy.data.image.RGB;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class BlurCorrection implements PostProcessing {
     @Override
     public void process(Fractal fractal) {
+        log.info("Start blur correction");
         for (int x = 0; x < fractal.width(); x++) {
             for (int y = 0; y < fractal.height(); y++) {
                 fractal.setPixel(x, y, blurPixel(x, y, fractal));
             }
         }
+        log.info("End blur correction");
     }
 
     private Pixel blurPixel(int x, int y, Fractal fractal) {

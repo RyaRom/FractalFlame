@@ -1,6 +1,7 @@
-package backend.academy.data.transformations;
+package backend.academy.data.variations;
 
 import backend.academy.data.image.Point;
+import backend.academy.data.transformations.WeightedTransformation;
 
 public final class SphereTransformation extends WeightedTransformation {
     public SphereTransformation(double weight) {

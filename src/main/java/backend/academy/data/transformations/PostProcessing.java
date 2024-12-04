@@ -1,4 +1,4 @@
-package backend.academy.data.postprocessing;
+package backend.academy.data.transformations;
 
 import backend.academy.data.image.Fractal;
 

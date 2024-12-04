@@ -4,13 +4,17 @@ import backend.academy.data.image.Format;
 import backend.academy.data.image.Fractal;
 import backend.academy.data.image.ImageSettings;
 import backend.academy.data.image.RGB;
-import backend.academy.data.postprocessing.BlurCorrection;
-import backend.academy.data.postprocessing.GammaCorrection;
-import backend.academy.data.transformations.AffineTransformation;
 import backend.academy.data.transformations.IterativeFunction;
-import backend.academy.data.transformations.SphereTransformation;
-import backend.academy.data.transformations.SwirlTransformation;
+import backend.academy.data.variations.AffineTransformation;
+import backend.academy.data.variations.SphereTransformation;
+import backend.academy.data.variations.SwirlTransformation;
 import backend.academy.multithreading.MultithreadingGenerator;
+import backend.academy.multithreading.postprocessing.BlurCorrectionMultithreading;
+import backend.academy.multithreading.postprocessing.GammaCorrectionMultithreading;
+import backend.academy.multithreading.postprocessing.HeatMapMultithreading;
+import backend.academy.singlethreading.postprocessing.BlurCorrection;
+import backend.academy.singlethreading.postprocessing.GammaCorrection;
+import backend.academy.singlethreading.postprocessing.HeatMap;
 import java.util.List;
 import java.util.Random;
 import lombok.extern.log4j.Log4j2;
@@ -55,7 +59,7 @@ public class Application {
         Fractal fractal2;
         long single = 0L;
         long multi = 0L;
-        ImageSettings settings = new ImageSettings(1716, 4096, 10000, 5000, 2, iterativeFunctions, 1.77);
+        ImageSettings settings = new ImageSettings(2000, 2000, 15000, 1000, 3, iterativeFunctions, 1.77);
         SingleThreadFractalRenderer renderer = new SingleThreadFractalRenderer();
 
         start = System.currentTimeMillis();
@@ -68,10 +72,20 @@ public class Application {
         end = System.currentTimeMillis();
         multi = end - start;
 
+        start = System.currentTimeMillis();
         renderer.postProcess(fractal, new GammaCorrection(), new BlurCorrection());
-        renderer.postProcess(fractal2, new GammaCorrection(), new BlurCorrection());
+        end = System.currentTimeMillis();
+        Long post1 = end - start;
+
+        start = System.currentTimeMillis();
+        renderer.postProcess(fractal, new GammaCorrectionMultithreading(),
+            new BlurCorrectionMultithreading());
+        end = System.currentTimeMillis();
+        Long post2 = end - start;
+
         renderer.saveAs(fractal, "src/main/resources", "fractalSingle", Format.PNG);
         renderer.saveAs(fractal2, "src/main/resources", "fractalMulti", Format.PNG);
-        log.info("Single thread ms: {}      Multithreading ms: {}", single, multi);
+        log.info("Fractal generation:    Single thread ms: {}      Multithreading ms: {}", single, multi);
+        log.info("Post processing:    Single thread ms: {}      Multithreading ms: {}", post1, post2);
     }
 }

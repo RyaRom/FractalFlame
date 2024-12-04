@@ -1,7 +1,8 @@
-package backend.academy.data.postprocessing;
+package backend.academy.singlethreading.postprocessing;
 
 import backend.academy.data.image.Fractal;
 import backend.academy.data.image.Pixel;
+import backend.academy.data.transformations.PostProcessing;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2

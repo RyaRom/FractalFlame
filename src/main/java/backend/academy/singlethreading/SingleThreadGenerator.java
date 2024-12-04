@@ -20,6 +20,7 @@ public class SingleThreadGenerator implements FractalGenerator {
             }
             processPointTransformations(fractal, settings);
         }
+        log.info("Fractal generated");
         return fractal;
     }
 }

@@ -1,6 +1,7 @@
-package backend.academy.data.transformations;
+package backend.academy.data.variations;
 
 import backend.academy.data.image.Point;
+import backend.academy.data.transformations.WeightedTransformation;
 
 public final class BubbleTransformation extends WeightedTransformation {
     public BubbleTransformation(double weight) {

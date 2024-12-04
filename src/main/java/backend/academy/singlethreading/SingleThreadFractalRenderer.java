@@ -2,7 +2,7 @@ package backend.academy.singlethreading;
 
 import backend.academy.data.image.Format;
 import backend.academy.data.image.Fractal;
-import backend.academy.data.postprocessing.PostProcessing;
+import backend.academy.data.transformations.PostProcessing;
 import backend.academy.service.FractalRenderer;
 import java.awt.image.BufferedImage;
 import java.io.File;

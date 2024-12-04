@@ -3,6 +3,8 @@ package backend.academy.data.transformations;
 import backend.academy.data.image.Point;
 import backend.academy.data.image.RGB;
 import java.util.function.UnaryOperator;
+
+import backend.academy.data.variations.AffineTransformation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

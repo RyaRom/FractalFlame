@@ -15,7 +15,10 @@ public record Fractal(
     public static Fractal of(int height, int width, double depth) {
         double aspectRatio = (double) width / height;
 
-        double xMin, xMax, yMin, yMax;
+        double xMin;
+        double xMax;
+        double yMin;
+        double yMax;
         if (aspectRatio >= 1.0) {
             xMin = -depth * aspectRatio;
             xMax = depth * aspectRatio;

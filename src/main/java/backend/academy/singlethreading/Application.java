@@ -11,15 +11,14 @@ import backend.academy.data.variations.SwirlTransformation;
 import backend.academy.multithreading.MultithreadingGenerator;
 import backend.academy.multithreading.postprocessing.BlurCorrectionMultithreading;
 import backend.academy.multithreading.postprocessing.GammaCorrectionMultithreading;
-import backend.academy.multithreading.postprocessing.HeatMapMultithreading;
 import backend.academy.singlethreading.postprocessing.BlurCorrection;
 import backend.academy.singlethreading.postprocessing.GammaCorrection;
-import backend.academy.singlethreading.postprocessing.HeatMap;
 import java.util.List;
 import java.util.Random;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@SuppressWarnings({"MagicNumber", "MultipleStringLiterals"})
 public class Application {
     public static final Random RANDOM = new Random();
 

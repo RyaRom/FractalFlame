@@ -9,6 +9,7 @@ public final class BubbleTransformation extends WeightedTransformation {
     }
 
     @Override
+    @SuppressWarnings("MagicNumber")
     public Point transform(Point point) {
         double r = 4 + point.x() * point.x() + point.y() * point.y();
         double newX = (4.0 * point.x()) / r;

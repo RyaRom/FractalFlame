@@ -6,6 +6,7 @@ import backend.academy.data.transformations.PostProcessing;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@SuppressWarnings("MagicNumber")
 public class GammaCorrection implements PostProcessing {
     @Override
     public void process(Fractal fractal) {

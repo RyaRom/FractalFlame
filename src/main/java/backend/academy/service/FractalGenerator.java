@@ -19,12 +19,13 @@ public interface FractalGenerator {
         }
 
         Pixel hitPixel = fractal.getPixel(scaled);
+        RGB newColor = rgb;
         if (hitPixel.hitCount() > 0) {
-            rgb = hitPixel.rgb().blend(rgb);
+            newColor = hitPixel.rgb().blend(rgb);
         }
         fractal.setPixel(
             scaled,
-            new Pixel(rgb, hitPixel.hitCount() + 1, hitPixel.normal())
+            new Pixel(newColor, hitPixel.hitCount() + 1, hitPixel.normal())
         );
     }
 
@@ -39,7 +40,7 @@ public interface FractalGenerator {
         }
     }
 
-    default void processPointTransformations(Fractal fractal, ImageSettings settings){
+    default void processPointTransformations(Fractal fractal, ImageSettings settings) {
         Point current = getRandomPoint(fractal);
         for (int step = -20; step < settings.iterationsForPoint(); step++) {
             var transformation = settings.getRandomTransformation();

@@ -5,6 +5,7 @@ import backend.academy.data.image.Pixel;
 import backend.academy.data.image.RGB;
 import backend.academy.data.transformations.PostProcessing;
 
+@SuppressWarnings("MagicNumber")
 public class HeatMap implements PostProcessing {
     @Override
     public void process(Fractal fractal) {

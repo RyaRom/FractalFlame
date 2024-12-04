@@ -2,7 +2,6 @@ package backend.academy.data.variations;
 
 import backend.academy.data.image.Point;
 import backend.academy.data.transformations.WeightedTransformation;
-
 import static java.lang.Math.sin;
 
 public final class SinusoidalTransformation extends WeightedTransformation {

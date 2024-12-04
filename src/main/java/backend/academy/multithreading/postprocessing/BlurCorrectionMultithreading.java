@@ -4,10 +4,11 @@ import backend.academy.data.image.Fractal;
 import backend.academy.data.image.Pixel;
 import backend.academy.data.image.RGB;
 import backend.academy.data.transformations.PostProcessing;
-import lombok.extern.log4j.Log4j2;
 import java.util.stream.IntStream;
+import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@SuppressWarnings("MagicNumber")
 public class BlurCorrectionMultithreading implements PostProcessing {
     @Override
     public void process(Fractal fractal) {

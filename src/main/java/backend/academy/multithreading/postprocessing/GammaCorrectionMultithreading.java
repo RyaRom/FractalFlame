@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@SuppressWarnings("MagicNumber")
 public class GammaCorrectionMultithreading implements PostProcessing {
     @Override
     public void process(Fractal fractal) {

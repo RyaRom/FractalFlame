@@ -14,18 +14,17 @@ import backend.academy.singlethreading.SingleThreadGenerator;
 import backend.academy.singlethreading.postprocessing.BlurCorrection;
 import backend.academy.singlethreading.postprocessing.GammaCorrection;
 import backend.academy.singlethreading.postprocessing.HeatMap;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.RepeatedTest;
-import static backend.academy.service.FractalUtil.RANDOM;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import static backend.academy.service.FractalUtil.getRandomTransformationList;
 import static backend.academy.service.FractalUtil.profileTime;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GeneratorsTest {
 
-    private static final int repetitions = 50;
-
-    private static final int repetitionsFunc = 50;
+    private static final int repetitions = 16;
 
     private static int concurrentGenIsFasterTimes = 0;
 
@@ -37,25 +36,41 @@ class GeneratorsTest {
         assertTrue(concurrentGenIsFasterTimes > repetitions / 2);
 
         System.out.println("Concurrent function is faster " + concurrentFuncIsFasterTimes + " times");
-        assertTrue(concurrentFuncIsFasterTimes > repetitionsFunc / 3);
+        assertTrue(concurrentFuncIsFasterTimes > repetitions / 3);
     }
 
-    @RepeatedTest(repetitions)
-    void speedTest() {
-        int height = RANDOM.nextInt(100, 1000);
-        int width = RANDOM.nextInt(100, 1000);
-        int startingPoints = RANDOM.nextInt(100, 2000);
-        int iterations = RANDOM.nextInt(100, 500);
-        SingleThreadGenerator singleGen = new SingleThreadGenerator();
-        MultithreadingGenerator concurrentGen = new MultithreadingGenerator();
+    @ParameterizedTest
+    @CsvSource({
+        "100, 100, 100, 100",
+        "500, 500, 500, 500",
+        "1000, 1000, 2000, 500",
+        "2000, 2000, 4000, 1000",
+        "50, 50, 50, 50",
+        "250, 250, 250, 250",
+        "750, 750, 1500, 750",
+        "1200, 1200, 2400, 1200",
+        "10, 10, 10, 10",
+        "200, 200, 400, 200",
+        "800, 800, 1600, 800",
+        "3000, 3000, 6000, 3000",
+        "25, 25, 25, 25",
+        "125, 125, 125, 125",
+        "625, 625, 1250, 625",
+        "3125, 3125, 6250, 3125"
+    })
+    void speedTest(int height, int width, int startingPoints, int iterations) {
         ImageSettings settings =
             new ImageSettings(height, width,
                 startingPoints, iterations, 1,
                 getRandomTransformationList(Variations.values()),
                 1.77);
+        SingleThreadGenerator singleGen = new SingleThreadGenerator();
+        MultithreadingGenerator concurrentGen = new MultithreadingGenerator();
+        FractalRenderer renderer = new FractalRendererImpl();
+        AtomicReference<Fractal> pointer = new AtomicReference<>();
 
         Long timeForSingle = FractalUtil.profileTime(() -> singleGen.generate(settings), null);
-        Long timeForConcurrent = FractalUtil.profileTime(() -> concurrentGen.generate(settings), null);
+        Long timeForConcurrent = FractalUtil.profileTime(() -> concurrentGen.generate(settings), pointer);
         long difference = timeForSingle - timeForConcurrent;
 
         System.out.println(settings);
@@ -64,22 +79,8 @@ class GeneratorsTest {
         if (difference > 0) {
             concurrentGenIsFasterTimes++;
         }
-    }
 
-    @RepeatedTest(repetitionsFunc)
-    void speedTestForOthers() {
-        int height = RANDOM.nextInt(0, 500);
-        int width = RANDOM.nextInt(0, 500);
-        int startingPoints = RANDOM.nextInt(0, 100);
-        int iterations = RANDOM.nextInt(0, 100);
-        ImageSettings settings =
-            new ImageSettings(height, width,
-                startingPoints, iterations, 1,
-                getRandomTransformationList(Variations.values()),
-                1.77);
-        FractalRenderer renderer = new FractalRendererImpl();
-        Fractal fractal = new MultithreadingGenerator().generate(settings);
-
+        Fractal fractal = pointer.get();
         Long single = profileTime(() -> {
             renderer.postProcess(fractal,
                 new GammaCorrection(), new HeatMap(), new BlurCorrection());
@@ -91,12 +92,12 @@ class GeneratorsTest {
             );
             return null;
         }, null);
-        long difference = single - concurrent;
+        long differenceForPostProcessing = single - concurrent;
 
         System.out.println(settings);
-        System.out.println("Difference: " + difference + "ms");
+        System.out.println("Difference: " + differenceForPostProcessing + "ms");
         System.out.println("\n\n");
-        if (difference > 0) {
+        if (differenceForPostProcessing > 0) {
             concurrentFuncIsFasterTimes++;
         }
     }

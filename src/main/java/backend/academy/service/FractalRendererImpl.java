@@ -1,9 +1,8 @@
-package backend.academy.singlethreading;
+package backend.academy.service;
 
 import backend.academy.data.image.Format;
 import backend.academy.data.image.Fractal;
 import backend.academy.data.transformations.PostProcessing;
-import backend.academy.service.FractalRenderer;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +12,7 @@ import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class SingleThreadFractalRenderer implements FractalRenderer {
+public class FractalRendererImpl implements backend.academy.service.FractalRenderer {
 
     @Override
     public void postProcess(Fractal fractal, PostProcessing... functions) {

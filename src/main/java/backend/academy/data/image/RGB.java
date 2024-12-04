@@ -16,6 +16,10 @@ public record RGB(int red, int green, int blue) {
         );
     }
 
+    public static RGB getRandomRGB() {
+        return new RGB(Math.random(), Math.random(), Math.random());
+    }
+
     public RGB blend(RGB other) {
         return new RGB(
             (this.red + other.red()) / 2,

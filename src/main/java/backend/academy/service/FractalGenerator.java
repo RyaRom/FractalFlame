@@ -7,7 +7,7 @@ import backend.academy.data.image.Pixel;
 import backend.academy.data.image.Point;
 import backend.academy.data.image.RGB;
 import static backend.academy.data.image.Coordinates.scale;
-import static backend.academy.singlethreading.Application.RANDOM;
+import static backend.academy.service.FractalUtil.RANDOM;
 
 public interface FractalGenerator {
     Fractal generate(ImageSettings settings);

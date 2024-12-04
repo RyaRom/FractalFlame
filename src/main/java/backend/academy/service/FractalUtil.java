@@ -10,13 +10,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
-import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import static backend.academy.data.variations.VariationFactory.getVariation;
 
-@RequiredArgsConstructor
+@SuppressWarnings("MagicNumber")
 public class FractalUtil {
     public static final Random RANDOM = new Random();
+
+    private FractalUtil() {
+    }
 
     public static IterativeFunction getRandomTransformation(Variations... variations) {
         double funcWeight = Math.random();

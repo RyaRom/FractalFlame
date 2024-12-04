@@ -8,7 +8,7 @@ import static backend.academy.singlethreading.postprocessing.BlurCorrection.blur
 
 @Log4j2
 @SuppressWarnings("MagicNumber")
-public class BlurCorrectionMultithreading implements PostProcessing {
+public class BlurCorrectionConcurrent implements PostProcessing {
     @Override
     public void process(Fractal fractal) {
         log.info("Start blur correction");

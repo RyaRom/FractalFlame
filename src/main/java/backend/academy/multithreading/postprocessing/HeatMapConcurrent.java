@@ -6,7 +6,7 @@ import backend.academy.singlethreading.postprocessing.HeatMap;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("MagicNumber")
-public class HeatMapMultithreading implements PostProcessing {
+public class HeatMapConcurrent implements PostProcessing {
     @Override
     public void process(Fractal fractal) {
         IntStream.range(0, fractal.height() * fractal.width())

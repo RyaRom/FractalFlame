@@ -9,7 +9,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @SuppressWarnings("MagicNumber")
-public class GammaCorrectionMultithreading implements PostProcessing {
+public class GammaCorrectionConcurrent implements PostProcessing {
     @Override
     public void process(Fractal fractal) {
         log.info("Start gamma correction");
@@ -19,8 +19,8 @@ public class GammaCorrectionMultithreading implements PostProcessing {
         IntStream.range(0, fractal.height() * fractal.width())
             .parallel()
             .forEach(i -> {
-                int x = i / fractal.width();
-                int y = i % fractal.width();
+                int x = i / fractal.height();
+                int y = i % fractal.height();
 
                 Pixel current = fractal.getPixel(x, y);
                 if (current.hitCount() != 0) {

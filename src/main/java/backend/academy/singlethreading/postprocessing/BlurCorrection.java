@@ -14,13 +14,13 @@ public class BlurCorrection implements PostProcessing {
         log.info("Start blur correction");
         for (int x = 0; x < fractal.width(); x++) {
             for (int y = 0; y < fractal.height(); y++) {
-                fractal.setPixel(x, y, blurPixel(x, y, fractal));
+                fractal.setPixel(x, y, blurForPixel(x, y, fractal));
             }
         }
         log.info("End blur correction");
     }
 
-    private Pixel blurPixel(int x, int y, Fractal fractal) {
+    public static Pixel blurForPixel(int x, int y, Fractal fractal) {
         int[][] kernel = {
             {1, 2, 1},
             {2, 4, 2},

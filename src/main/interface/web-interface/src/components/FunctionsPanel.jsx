@@ -1,4 +1,5 @@
-import {useState} from "react";
+import {useContext} from "react";
+import {AppContext} from "../App";
 
 const variations = [
     'BUBBLE',
@@ -16,7 +17,7 @@ const variations = [
 ];
 
 export const FunctionsPanel = () => {
-    const [functions, setFunctions] = useState([]);
+    const {functions, setFunctions} = useContext(AppContext);
 
     const addFunction = () => {
         setFunctions([...functions, {
@@ -58,7 +59,7 @@ export const FunctionsPanel = () => {
                         funcData={func}
                         updateFunction={updateFunction}
                         addVariation={() => addVariation(index)}
-                        deleteFunc={deleteFunction}
+                        deleteFunc={() => deleteFunction(index)}
                     />
                 ))}
             </div>
@@ -88,7 +89,6 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                 <input
                     type="number"
                     step="0.1"
-                    value={funcData.weight}
                     onChange={(e) => handleChange('weight', parseFloat(e.target.value))}
                     placeholder={"0.5"}
                 />
@@ -100,7 +100,6 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                 Цвет:
                 <input
                     type="text"
-                    value={funcData.rgb.join(", ")}
                     onChange={(e) => {
                         const values = e.target.value.split(', ');
                         handleChange('rgb', values);  // Обновляем состояние как массив чисел
@@ -115,7 +114,6 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                 Афинная функция:
                 <input
                     type="text"
-                    value={funcData.affine.join(", ")}
                     onChange={(e) => {
                         const values = e.target.value.split(', ')
                         handleChange('affine', values)
@@ -126,11 +124,10 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
 
             <h4>Вариации</h4>
             {funcData.variations.map((variation, vIndex) => (
-                <div key={vIndex}>
+                <div key={vIndex} style={{marginBottom: '10px'}}>
                     <label>
                         Тип:
                         <select
-                            value={variation.name}
                             onChange={(e) => {
                                 handleVariationChange(vIndex, 'name', e.target.value);
                             }}
@@ -150,12 +147,12 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                         <input
                             type="number"
                             step="0.1"
-                            value={variation.weight}
                             onChange={(e) => {
                                 const updatedVariations = [...funcData.variations];
                                 updatedVariations[vIndex].weight = parseFloat(e.target.value);
                                 handleChange('variations', updatedVariations);
                             }}
+                            placeholder={"0.5"}
                         />
                     </label>
 
@@ -176,9 +173,8 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
 
             <button onClick={addVariation}>Добавить вариацию</button>
             <br/>
-            <button onClick={() => {
-                deleteFunc(index)
-            }}>Удалить функцию
+            <button onClick={deleteFunc}>
+                Удалить функцию
             </button>
         </div>
     );

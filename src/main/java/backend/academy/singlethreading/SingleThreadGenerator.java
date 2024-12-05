@@ -13,7 +13,7 @@ public class SingleThreadGenerator implements FractalGenerator {
 
     @Override
     public Fractal generate(ImageSettings settings) {
-        Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes(), settings.zoom());
+        Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes(), settings.depth());
 
         for (int i = 0; i < settings.startingPoints(); i++) {
             if (i % 500 == 0) {

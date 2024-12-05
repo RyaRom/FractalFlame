@@ -13,7 +13,7 @@ public class MultithreadingGenerator implements FractalGenerator {
 
     @Override
     public Fractal generate(ImageSettings settings) {
-        Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes(), settings.zoom());
+        Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes(), settings.depth());
         IntStream.range(0, settings.startingPoints())
             .parallel()
             .forEach(i -> processPointTransformations(fractal, settings));

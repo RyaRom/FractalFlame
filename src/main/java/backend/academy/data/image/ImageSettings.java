@@ -14,7 +14,8 @@ public record ImageSettings(
     int symmetry,
     List<IterativeFunction> iterativeFunctions,
     List<Double> prefixSumTransformations,
-    double zoom
+    double depth,
+    double gamma
 ) {
     public ImageSettings(
         int heightRes,
@@ -23,10 +24,11 @@ public record ImageSettings(
         int iterationsForPoint,
         int symmetry,
         List<IterativeFunction> iterativeFunctions,
-        double zoom
+        double depth,
+        double gamma
     ) {
         this(widthRes, heightRes, startingPoints, iterationsForPoint, symmetry,
-            iterativeFunctions, calculatePrefixSum(iterativeFunctions), zoom);
+            iterativeFunctions, calculatePrefixSum(iterativeFunctions), depth, gamma);
     }
 
     private static List<Double> calculatePrefixSum(List<IterativeFunction> iterativeFunctions) {

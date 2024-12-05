@@ -63,7 +63,7 @@ class GeneratorsTest {
             new ImageSettings(height, width,
                 startingPoints, iterations, 1,
                 getRandomTransformationList(Variations.values()),
-                1.77);
+                1.77, 2.2);
         SingleThreadGenerator singleGen = new SingleThreadGenerator();
         MultithreadingGenerator concurrentGen = new MultithreadingGenerator();
         FractalRenderer renderer = new FractalRendererImpl();

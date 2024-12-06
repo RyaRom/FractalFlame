@@ -51,19 +51,6 @@ public interface FractalGenerator {
         }
     }
 
-    default void processPointTransformations(Fractal fractal, ImageSettings settings) {
-        Point current = getRandomPoint(fractal);
-        for (int step = -20; step < settings.iterationsForPoint(); step++) {
-            if (Thread.currentThread().isInterrupted()) {
-                return;
-            }
-
-            var transformation = settings.getRandomTransformation();
-            current = transformation.apply(current);
-            drawTransformedPoint(current, settings.symmetry(), transformation.rgb(), fractal);
-        }
-    }
-
     default Point getRandomPoint(Fractal fractal) {
         double newX = RANDOM.nextDouble(fractal.xMin(), fractal.xMax());
         double newY = RANDOM.nextDouble(fractal.yMin(), fractal.yMax());

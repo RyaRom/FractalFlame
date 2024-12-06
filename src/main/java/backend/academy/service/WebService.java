@@ -14,6 +14,7 @@ import backend.academy.service.fractals.FractalRendererImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -51,9 +52,11 @@ public class WebService {
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
         Future<?> gen = executorService.submit(() -> {
+            log.info("Generation process started");
             try {
                 generator.generate(fractal, id);
             } finally {
+                log.info("Generation process finished");
                 countDownLatch.countDown();
             }
         });
@@ -62,11 +65,15 @@ public class WebService {
         Future<?> render = executorService.submit(() -> {
             try {
                 //after generation is finished or interrupted
+                log.info("Waiting for generation process to finish");
                 countDownLatch.await();
+                log.info("Rendering process started");
                 renderer.postProcess(fractal, id, fractalCache);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
+                log.info("Rendering process interrupted");
                 //if render stops before it finishes
             }
+            log.info("Rendering process finished");
         });
         process.renderTask(render);
     }
@@ -82,14 +89,22 @@ public class WebService {
         process.renderTask().cancel(true);
         fractalCache.deleteProcess(id);
         fractalCache.deleteFractal(id);
+        log.info("Fractal deleted");
     }
 
     public String renderFractal(String id) {
         GenerationProcess process = fractalCache.getProcess(id);
         Fractal fractal = fractalCache.getFractal(id);
         try {
-            process.renderTask().get();
-        } catch (InterruptedException | ExecutionException e) {
+            var generation = process.genTask();
+            log.info("isDone: {}", generation.isDone());
+            log.info("isCancelled: {}", generation.isCancelled());
+            if (generation.isDone() || generation.isCancelled()) {
+                process.renderTask().get();
+            } else {
+                generation.cancel(true);
+            }
+        } catch (InterruptedException | ExecutionException | CancellationException e) {
             //new image is creating
             return null;
         }

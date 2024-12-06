@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class WebController {
     private final WebService webService;
-    private final ObjectMapper objectMapper;
 
     @PostMapping("/generate")
     public ResponseEntity<String> generate(@RequestBody ImageSettingsDTO imageSettingsDTO) {

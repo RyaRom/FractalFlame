@@ -3,6 +3,7 @@ package backend.academy.singlethreading;
 import backend.academy.data.FractalCache;
 import backend.academy.data.image.Fractal;
 import backend.academy.data.image.ImageSettings;
+import backend.academy.data.image.Point;
 import backend.academy.service.fractals.FractalGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,7 +31,18 @@ public class SingleThreadGenerator implements FractalGenerator {
         log.info("Fractal generated");
         complete(id);
     }
+    private void processPointTransformations(Fractal fractal, ImageSettings settings) {
+        Point current = getRandomPoint(fractal);
+        for (int step = -20; step < settings.iterationsForPoint(); step++) {
+            if (Thread.currentThread().isInterrupted()) {
+                return;
+            }
 
+            var transformation = settings.getRandomTransformation();
+            current = transformation.apply(current);
+            drawTransformedPoint(current, settings.symmetry(), transformation.rgb(), fractal);
+        }
+    }
     private void complete(String id) {
         var process = fractalCache.getProcess(id);
         process.shutdownTimeGen(System.currentTimeMillis());

@@ -10,11 +10,10 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 @SuppressWarnings("MagicNumber")
 public class SingleThreadGenerator implements FractalGenerator {
+    private final ImageSettings settings;
 
     @Override
-    public Fractal generate(ImageSettings settings) {
-        Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes(), settings.depth());
-
+    public Fractal generate(Fractal fractal) {
         for (int i = 0; i < settings.startingPoints(); i++) {
             if (i % 500 == 0) {
                 log.info("Point {} processed", i);

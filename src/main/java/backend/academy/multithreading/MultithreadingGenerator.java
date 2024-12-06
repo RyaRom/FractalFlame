@@ -10,10 +10,10 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RequiredArgsConstructor
 public class MultithreadingGenerator implements FractalGenerator {
+    private final ImageSettings settings;
 
     @Override
-    public Fractal generate(ImageSettings settings) {
-        Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes(), settings.depth());
+    public Fractal generate(Fractal fractal) {
         IntStream.range(0, settings.startingPoints())
             .parallel()
             .forEach(i -> processPointTransformations(fractal, settings));

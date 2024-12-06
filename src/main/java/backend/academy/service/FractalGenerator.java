@@ -10,7 +10,13 @@ import static backend.academy.data.image.Coordinates.scale;
 import static backend.academy.service.FractalUtil.RANDOM;
 
 public interface FractalGenerator {
-    Fractal generate(ImageSettings settings);
+
+    /**
+     * takes a reference to the fractal and modifies it
+     *
+     * @return the reference to the same fractal
+     */
+    Fractal generate(Fractal fractal);
 
     default void hitPixel(Point position, RGB rgb, Fractal fractal) {
         Coordinates scaled = scale(position, fractal, 1.0);

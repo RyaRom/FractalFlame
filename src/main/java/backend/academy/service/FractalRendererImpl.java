@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class FractalRendererImpl implements backend.academy.service.FractalRenderer {
+public class FractalRendererImpl implements FractalRenderer {
 
     @Override
     public void postProcess(Fractal fractal, PostProcessing... functions) {

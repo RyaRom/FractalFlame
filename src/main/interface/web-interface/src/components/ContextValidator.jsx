@@ -9,8 +9,6 @@ export const ContextValidator = () => {
         const fractal = {functions: [...functions], ...settings};
 
         console.log(JSON.stringify(fractal, null, 2))
-        for (let key in fractal) {
-        }
     }
 
     return (

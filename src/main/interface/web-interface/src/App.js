@@ -13,6 +13,7 @@ function App() {
     const [settings, setSettings] = useState({
         isGamma: true,
         isBlur: true,
+        isConcurrent: true,
         isHeatMap: false,
         points: 1000,
         iterations: 1000,

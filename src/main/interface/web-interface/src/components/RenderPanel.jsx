@@ -42,6 +42,14 @@ export const RenderPanel = () => {
             <label>
                 <input
                     type="checkbox"
+                    defaultChecked={true}
+                    onChange={handleCheckbox('isConcurrent')}
+                />
+                Многопоточность
+            </label>
+            <label>
+                <input
+                    type="checkbox"
                     onChange={handleCheckbox('isHeatMap')}
                 />
                 HeatMap

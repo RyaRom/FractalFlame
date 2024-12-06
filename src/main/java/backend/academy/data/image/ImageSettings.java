@@ -15,7 +15,11 @@ public record ImageSettings(
     List<IterativeFunction> iterativeFunctions,
     List<Double> prefixSumTransformations,
     double depth,
-    double gamma
+    double gamma,
+    boolean gammaEnabled,
+    boolean isBlur,
+    boolean isHeatMap,
+    boolean isConcurrent
 ) {
     public ImageSettings(
         int heightRes,
@@ -25,10 +29,15 @@ public record ImageSettings(
         int symmetry,
         List<IterativeFunction> iterativeFunctions,
         double depth,
-        double gamma
+        double gamma,
+        boolean gammaEnabled,
+        boolean isBlur,
+        boolean isHeatMap,
+        boolean isConcurrent
     ) {
         this(widthRes, heightRes, startingPoints, iterationsForPoint, symmetry,
-            iterativeFunctions, calculatePrefixSum(iterativeFunctions), depth, gamma);
+            iterativeFunctions, calculatePrefixSum(iterativeFunctions), depth, gamma,
+            gammaEnabled, isBlur, isHeatMap, isConcurrent);
     }
 
     private static List<Double> calculatePrefixSum(List<IterativeFunction> iterativeFunctions) {

@@ -1,7 +1,9 @@
 package backend.academy.controller;
 
 import backend.academy.data.webDTO.ImageSettingsDTO;
+import backend.academy.data.webDTO.ResponseDTO;
 import backend.academy.service.WebService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class WebController {
     private final WebService webService;
+    private final ObjectMapper objectMapper;
 
     @PostMapping("/generate")
-    public ResponseEntity<String> test(@RequestBody ImageSettingsDTO imageSettingsDTO) {
+    public ResponseEntity<String> generate(@RequestBody ImageSettingsDTO imageSettingsDTO) {
         return ResponseEntity.ok(webService.startGeneration(imageSettingsDTO));
     }
 
     // for interruption without rendering
     @DeleteMapping("stop/{id}")
-    public ResponseEntity<Void> interrupt(@PathVariable String id) {
+    public ResponseEntity<Void> terminate(@PathVariable String id) {
         webService.terminateFractalProcessCompletely(id);
         return ResponseEntity.ok().build();
     }

@@ -6,23 +6,32 @@ import backend.academy.data.image.Fractal;
 import backend.academy.data.image.ImageSettings;
 import backend.academy.data.webDTO.GenerationProcess;
 import backend.academy.data.webDTO.ImageSettingsDTO;
+import backend.academy.data.webDTO.ResponseDTO;
 import backend.academy.service.fractals.FractalFactory;
 import backend.academy.service.fractals.FractalGenerator;
 import backend.academy.service.fractals.FractalRenderer;
 import backend.academy.service.fractals.FractalRendererImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import static backend.academy.data.Mapper.toResponse;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class WebService {
     private final FractalCache fractalCache;
 
     private final ExecutorService executorService;
+
+    private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     public String startGeneration(ImageSettingsDTO imageSettingsDTO) {
         ImageSettings settings = Mapper.mapToImageSettings(imageSettingsDTO);
@@ -82,9 +91,18 @@ public class WebService {
             process.renderTask().get();
         } catch (InterruptedException | ExecutionException e) {
             //new image is creating
-            return "";
+            return null;
         }
-        return fractal.encode();
+
+        //weird deserialization error
+        ResponseDTO responseDTO = toResponse(process, fractal.encode());
+        try {
+            return mapper.writeValueAsString(responseDTO);
+        } catch (JsonProcessingException e) {
+            log.error("json error {}", e.getMessage());
+        }
+        log.info("{}", responseDTO);
+        return "";
     }
 
     public String getProgress(String id) {

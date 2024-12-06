@@ -7,11 +7,15 @@ import backend.academy.data.transformations.IterativeFunction;
 import backend.academy.data.variations.AffineTransformation;
 import backend.academy.data.variations.VariationFactory;
 import backend.academy.data.variations.Variations;
+import backend.academy.data.webDTO.GenerationProcess;
 import backend.academy.data.webDTO.ImageSettingsDTO;
 import backend.academy.data.webDTO.IterativeFunctionDTO;
+import backend.academy.data.webDTO.ResponseDTO;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class Mapper {
     public static ImageSettings mapToImageSettings(ImageSettingsDTO dto) {
         List<IterativeFunction> iterativeFunctions = dto.functions().stream()
@@ -51,9 +55,21 @@ public class Mapper {
         );
 
         AbstractTransformation[] transformations = dto.variations().stream()
-            .map(variation -> VariationFactory.getVariation(Variations.valueOf(variation.name().toUpperCase()), variation.weight()))
+            .map(variation -> VariationFactory.getVariation(Variations.valueOf(variation.name().toUpperCase()),
+                variation.weight()))
             .toArray(AbstractTransformation[]::new);
 
         return new IterativeFunction(rgb, affineTransformation, dto.weight(), transformations);
+    }
+
+    public static ResponseDTO toResponse(GenerationProcess generationProcess, String base64Image) {
+        log.info("process: {}", generationProcess);
+        return new ResponseDTO(
+            generationProcess.shutdownTimeGen() - generationProcess.startTimeGen(),
+            generationProcess.shutdownTimeRender() - generationProcess.startTimeRender(),
+            generationProcess.threadsCount(),
+            generationProcess.config(),
+            base64Image
+        );
     }
 }

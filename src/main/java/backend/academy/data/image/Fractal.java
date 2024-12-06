@@ -77,8 +77,7 @@ public record Fractal(
         try {
             ImageIO.write(image, "png", outputStream);
             byte[] imageBytes = outputStream.toByteArray();
-            String base64 = Base64.getEncoder().encodeToString(imageBytes);
-            return "data:image/png;base64," + base64;
+            return Base64.getEncoder().encodeToString(imageBytes);
         } catch (IOException e) {
             return e.getMessage();
         }

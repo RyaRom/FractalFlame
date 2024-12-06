@@ -2,6 +2,7 @@ import {useContext} from "react";
 import {AppContext} from "../App";
 
 const variations = [
+    '',
     'BUBBLE',
     'DISK',
     'HANDKERCHIEF',
@@ -89,6 +90,7 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                 <input
                     type="number"
                     step="0.1"
+                    min="0.01"
                     onChange={(e) => handleChange('weight', parseFloat(e.target.value))}
                     placeholder={"0.5"}
                 />
@@ -147,6 +149,7 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                         <input
                             type="number"
                             step="0.1"
+                            min="0.01"
                             onChange={(e) => {
                                 const updatedVariations = [...funcData.variations];
                                 updatedVariations[vIndex].weight = parseFloat(e.target.value);

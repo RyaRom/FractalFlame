@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {RenderPanel} from "./components/RenderPanel";
 import {FunctionsPanel} from "./components/FunctionsPanel";
-import {ImageSettings} from "./components/ImageSettings";
+import {ImageSettingsPanel} from "./components/ImageSettingsPanel";
 import {FractalImage} from "./components/FractalImage";
 
 
@@ -10,10 +10,28 @@ export const AppContext = React.createContext({});
 
 function App() {
     const [functions, setFunctions] = useState([]);
-    const [settings, setSettings] = useState([]);
+    const [settings, setSettings] = useState({
+        isGamma: true,
+        isBlur: true,
+        isHeatMap: false,
+        points: 1000,
+        iterations: 1000,
+        symmetry: 1,
+        height: 1500,
+        width: 1500,
+        depth: 1.77,
+        gamma: 2.2
+    });
+    const [isCreating, setIsCreating] = useState(false);
+    const [isRendering, setIsRendering] = useState(false);
 
     return (
-        <AppContext.Provider value={{functions, setFunctions, settings, setSettings}}>
+        <AppContext.Provider value={{
+            functions, setFunctions,
+            settings, setSettings,
+            isCreating, setIsCreating,
+            isRendering, setIsRendering
+        }}>
             <div className="app">
                 <div className="render-panel">
                     <RenderPanel/>
@@ -22,7 +40,7 @@ function App() {
                     <FunctionsPanel/>
                 </div>
                 <div className="image-settings">
-                    <ImageSettings/>
+                    <ImageSettingsPanel/>
                 </div>
                 <div className="fractal">
                     <FractalImage/>

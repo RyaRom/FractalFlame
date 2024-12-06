@@ -4,7 +4,7 @@ import backend.academy.data.transformations.IterativeFunction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import static backend.academy.service.FractalUtil.RANDOM;
+import static backend.academy.service.fractals.FractalUtil.RANDOM;
 
 public record ImageSettings(
     int widthRes,

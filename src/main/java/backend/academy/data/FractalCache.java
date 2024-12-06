@@ -1,6 +1,7 @@
 package backend.academy.data;
 
 import backend.academy.data.image.Fractal;
+import backend.academy.data.webDTO.GenerationProcess;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.UUID;
@@ -11,10 +12,17 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("singleton")
 public class FractalCache {
-    private final Cache<String, Fractal> cache;
+    private final Cache<String, Fractal> fractals;
+
+    private final Cache<String, GenerationProcess> processes;
 
     public FractalCache() {
-        this.cache = Caffeine.newBuilder()
+        this.fractals = Caffeine.newBuilder()
+            .maximumSize(1_000_00)
+            .expireAfterWrite(30, TimeUnit.MINUTES)
+            .build();
+
+        this.processes = Caffeine.newBuilder()
             .maximumSize(1_000_00)
             .expireAfterWrite(30, TimeUnit.MINUTES)
             .build();
@@ -25,18 +33,34 @@ public class FractalCache {
     }
 
     public void cacheFractal(String id, Fractal fractal) {
-        cache.put(id, fractal);
+        this.fractals.put(id, fractal);
     }
 
     public Fractal getFractal(String id) {
-        return cache.getIfPresent(id);
+        return fractals.getIfPresent(id);
     }
 
     public void deleteFractal(String id) {
-        cache.invalidate(id);
+        fractals.invalidate(id);
     }
 
     public boolean containsFractal(String id) {
-        return cache.asMap().containsKey(id);
+        return fractals.asMap().containsKey(id);
+    }
+
+    public void cacheProcess(String id, GenerationProcess generationProcess) {
+        this.processes.put(id, generationProcess);
+    }
+
+    public GenerationProcess getProcess(String id) {
+        return processes.getIfPresent(id);
+    }
+
+    public void deleteProcess(String id) {
+        processes.invalidate(id);
+    }
+
+    public boolean containsProcess(String id) {
+        return processes.asMap().containsKey(id);
     }
 }

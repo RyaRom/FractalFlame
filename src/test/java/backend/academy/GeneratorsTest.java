@@ -7,9 +7,9 @@ import backend.academy.multithreading.MultithreadingGenerator;
 import backend.academy.multithreading.postprocessing.BlurCorrectionConcurrent;
 import backend.academy.multithreading.postprocessing.GammaCorrectionConcurrent;
 import backend.academy.multithreading.postprocessing.HeatMapConcurrent;
-import backend.academy.service.FractalRenderer;
-import backend.academy.service.FractalRendererImpl;
-import backend.academy.service.FractalUtil;
+import backend.academy.service.fractals.FractalRenderer;
+import backend.academy.service.fractals.FractalRendererImpl;
+import backend.academy.service.fractals.FractalUtil;
 import backend.academy.singlethreading.SingleThreadGenerator;
 import backend.academy.singlethreading.postprocessing.BlurCorrection;
 import backend.academy.singlethreading.postprocessing.GammaCorrection;
@@ -18,8 +18,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import static backend.academy.service.FractalUtil.getRandomTransformationList;
-import static backend.academy.service.FractalUtil.profileTime;
+import static backend.academy.service.fractals.FractalUtil.getRandomTransformationList;
+import static backend.academy.service.fractals.FractalUtil.profileTime;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GeneratorsTest {

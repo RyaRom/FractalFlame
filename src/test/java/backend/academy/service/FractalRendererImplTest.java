@@ -2,6 +2,7 @@ package backend.academy.service;
 
 import backend.academy.data.image.Format;
 import backend.academy.data.image.Fractal;
+import backend.academy.service.fractals.FractalRendererImpl;
 import backend.academy.singlethreading.postprocessing.BlurCorrection;
 import backend.academy.singlethreading.postprocessing.GammaCorrection;
 import backend.academy.singlethreading.postprocessing.HeatMap;

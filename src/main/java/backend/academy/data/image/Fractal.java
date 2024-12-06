@@ -1,6 +1,10 @@
 package backend.academy.data.image;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+import javax.imageio.ImageIO;
 
 public record Fractal(
     Pixel[][] pixels,
@@ -66,7 +70,21 @@ public record Fractal(
             && scaled.y() < height && scaled.y() >= 0;
     }
 
-    public BufferedImage toBufferedImage() {
+    public String encode() {
+        BufferedImage image = image();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        try {
+            ImageIO.write(image, "png", outputStream);
+            byte[] imageBytes = outputStream.toByteArray();
+            String base64 = Base64.getEncoder().encodeToString(imageBytes);
+            return "data:image/png;base64," + base64;
+        } catch (IOException e) {
+            return e.getMessage();
+        }
+    }
+
+    public BufferedImage image() {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         for (int y = 0; y < height; y++) {
@@ -75,6 +93,7 @@ public record Fractal(
                 image.setRGB(x, y, current.rgb().toRGBInt());
             }
         }
+
         return image;
     }
 }

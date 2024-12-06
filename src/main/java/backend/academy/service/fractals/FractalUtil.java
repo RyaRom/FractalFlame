@@ -1,4 +1,4 @@
-package backend.academy.service;
+package backend.academy.service.fractals;
 
 import backend.academy.data.image.RGB;
 import backend.academy.data.transformations.AbstractTransformation;

@@ -1,8 +1,9 @@
 package backend.academy.singlethreading;
 
+import backend.academy.data.FractalCache;
 import backend.academy.data.image.Fractal;
 import backend.academy.data.image.ImageSettings;
-import backend.academy.service.FractalGenerator;
+import backend.academy.service.fractals.FractalGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -12,15 +13,27 @@ import lombok.extern.log4j.Log4j2;
 public class SingleThreadGenerator implements FractalGenerator {
     private final ImageSettings settings;
 
+    private final FractalCache fractalCache;
+
     @Override
-    public Fractal generate(Fractal fractal) {
+    public void generate(Fractal fractal, String id) {
         for (int i = 0; i < settings.startingPoints(); i++) {
             if (i % 500 == 0) {
                 log.info("Point {} processed", i);
             }
+            if (Thread.currentThread().isInterrupted()) {
+                log.info("Generation process interrupted in single thread mode");
+                return;
+            }
             processPointTransformations(fractal, settings);
         }
         log.info("Fractal generated");
-        return fractal;
+        complete(id);
+    }
+
+    private void complete(String id) {
+        var process = fractalCache.getProcess(id);
+        process.shutdownTimeGen(System.currentTimeMillis());
+        process.threadsCount(1L);
     }
 }

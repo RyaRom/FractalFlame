@@ -1,4 +1,4 @@
-package backend.academy.service;
+package backend.academy.service.fractals;
 
 import backend.academy.data.image.Coordinates;
 import backend.academy.data.image.Fractal;
@@ -6,17 +6,22 @@ import backend.academy.data.image.ImageSettings;
 import backend.academy.data.image.Pixel;
 import backend.academy.data.image.Point;
 import backend.academy.data.image.RGB;
+import backend.academy.data.webDTO.GenerationProcess;
 import static backend.academy.data.image.Coordinates.scale;
-import static backend.academy.service.FractalUtil.RANDOM;
+import static backend.academy.service.fractals.FractalUtil.RANDOM;
 
 public interface FractalGenerator {
 
     /**
      * takes a reference to the fractal and modifies it
      *
-     * @return the reference to the same fractal
+     * @param fractal the reference to fractal
+     * @param id      the id of the fractal and current generation process
+     *                <p>
+     *                {@link GenerationProcess}
+     *                </p>
      */
-    Fractal generate(Fractal fractal);
+    void generate(Fractal fractal, String id);
 
     default void hitPixel(Point position, RGB rgb, Fractal fractal) {
         Coordinates scaled = scale(position, fractal, 1.0);
@@ -49,6 +54,10 @@ public interface FractalGenerator {
     default void processPointTransformations(Fractal fractal, ImageSettings settings) {
         Point current = getRandomPoint(fractal);
         for (int step = -20; step < settings.iterationsForPoint(); step++) {
+            if (Thread.currentThread().isInterrupted()) {
+                return;
+            }
+
             var transformation = settings.getRandomTransformation();
             current = transformation.apply(current);
             drawTransformedPoint(current, settings.symmetry(), transformation.rgb(), fractal);

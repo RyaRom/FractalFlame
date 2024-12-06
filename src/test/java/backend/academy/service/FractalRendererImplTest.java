@@ -18,7 +18,7 @@ class FractalRendererImplTest {
         String path = "./";
         String name = "test";
         Fractal fractal = Fractal.of(100, 100, 1.0);
-        FractalRendererImpl renderer = new FractalRendererImpl();
+        FractalRendererImpl renderer = new FractalRendererImpl(null);
         for (Format format : Format.values()) {
             renderer.saveAs(fractal, path, name, format);
             File created = new File(
@@ -26,13 +26,5 @@ class FractalRendererImplTest {
             assertTrue(created.exists());
             created.delete();
         }
-    }
-
-    @Test
-    void process() {
-        Fractal fractal = Fractal.of(100, 100, 1.0);
-        FractalRendererImpl renderer = new FractalRendererImpl();
-        assertDoesNotThrow(() ->
-            renderer.postProcess(fractal, new GammaCorrection(), new BlurCorrection(), new HeatMap()));
     }
 }

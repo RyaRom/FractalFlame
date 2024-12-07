@@ -13,7 +13,7 @@ export const FractalImage = () => {
         <div>
             <img
                 src={fractalImage}
-                alt="Error loading pic"
+                alt="Loading..."
                 className="pic"
             />
         </div>

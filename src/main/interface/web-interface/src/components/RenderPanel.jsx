@@ -108,12 +108,15 @@ const GetStatistic = ({profilingData}) => {
         return <div/>
     }
 
+    let timeGen = profilingData["timeForGeneration"] < 0 ? 0.0 : profilingData["timeForGeneration"] / 1000
+    let timeRender = profilingData["timeForRender"] < 0 ? 0.0 : profilingData["timeForRender"] / 1000
+
     return (
         <div>
             <h6>Подробная статистика:</h6>
             <div>
-                Время генерации: {profilingData["timeForGeneration"] / 1000} сек.<br/>
-                Время рендера: {profilingData["timeForRender"] / 1000} сек.<br/>
+                Время генерации: {timeGen} сек.<br/>
+                Время рендера: {timeRender} сек.<br/>
                 Количество потоков: {profilingData["threadsCount"]}<br/>
                 Конфигурация: {profilingData["config"]}<br/>
             </div>

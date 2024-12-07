@@ -24,7 +24,7 @@ public class SingleThreadGenerator implements FractalGenerator {
             }
             if (Thread.currentThread().isInterrupted()) {
                 log.info("Generation process interrupted in single thread mode");
-                return;
+                break;
             }
             processPointTransformations(fractal, settings);
         }

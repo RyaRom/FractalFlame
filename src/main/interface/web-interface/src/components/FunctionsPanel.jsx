@@ -111,12 +111,12 @@ export const FunctionsPanel = () => {
             <button
                 style={{marginBottom: 10}}
                 onClick={addNewFunction}>
-                Добавить функцию
+                Add function
             </button>
             <button
                 style={{marginBottom: 10}}
                 onClick={addRandomFunc}>
-                Случайная функция
+                Random function
             </button>
         </div>
     );
@@ -137,9 +137,9 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
 
     return (
         <div className="function-container">
-            <h3>Функция {index}</h3>
+            <h3>Function {index}</h3>
             <label>
-                Вес:
+                Weight:
                 <input
                     type="number"
                     step="0.1"
@@ -153,7 +153,7 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
             <br/>
 
             <label>
-                Цвет:
+                Color:
                 <input
                     type="text"
                     onChange={(e) => {
@@ -168,7 +168,7 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
             <br/>
 
             <label>
-                Афинная функция:
+                Affine function:
                 <input
                     type="text"
                     onChange={(e) => {
@@ -180,12 +180,13 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                 />
             </label>
 
-            <h4>Вариации</h4>
+            <h4>Variations</h4>
             {funcData.variations.map((variation, vIndex) => (
                 <div key={vIndex} style={{marginBottom: '10px'}}>
                     <label>
-                        Тип:
+                        Type:
                         <select
+                            defaultValue={variation.name}
                             onChange={(e) => {
                                 handleVariationChange(vIndex, 'name', e.target.value);
                             }}
@@ -201,7 +202,7 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                     <br/>
 
                     <label>
-                        (Вес):
+                        Weight:
                         <input
                             type="number"
                             step="0.1"
@@ -224,18 +225,17 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                                 .filter((_, i) => i !== vIndex)
                             handleChange('variations', updatedVars)
                         }}
-                        defaultValue={variation.name}
                     >
-                        Удалить вариацию
+                        Delete variation
                     </button>
                     <br/>
                 </div>
             ))}
 
-            <button onClick={addVariation}>Добавить вариацию</button>
+            <button onClick={addVariation}>Add variation</button>
             <br/>
             <button onClick={deleteFunc}>
-                Удалить функцию
+                Delete function
             </button>
         </div>
     );

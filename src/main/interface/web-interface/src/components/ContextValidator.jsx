@@ -1,4 +1,4 @@
-import {AppContext} from "../App";
+import {AppContext, server} from "../App";
 import {useContext, useEffect, useState} from "react";
 
 export const ContextValidator = () => {
@@ -9,6 +9,24 @@ export const ContextValidator = () => {
     const {setProfilingData} = useContext(AppContext);
     const [isStarted, setIsStarted] = useState(false);
 
+    const fetchProgress = async () => {
+        try {
+            const response = await fetch(`${server}/api/progress/${fractalId}`,
+                {
+                    method: "GET",
+                    credentials: "include"
+                })
+            if (response.ok) {
+                const img = await response.text();
+                setFractalImage(img);
+            } else {
+                console.log(await response.text());
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     useEffect(() => {
         if (!isStarted) return
         const intervalId = setInterval(() => {
@@ -16,7 +34,19 @@ export const ContextValidator = () => {
             fetchProgress()
         }, 4000);
         return () => clearInterval(intervalId);
-    }, [fractalId, isStarted]);
+    }, [fractalId, isStarted, fetchProgress]);
+
+    const terminate = async () => {
+        console.log("Terminating...")
+        try {
+            await fetch(`${server}/api/stop/${fractalId}`, {
+                method: "DELETE",
+                credentials: "include"
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     const startGeneration = async () => {
 
@@ -25,29 +55,16 @@ export const ContextValidator = () => {
             ...settings,
         };
 
-        fractal.functions = fractal.functions.map(func => ({
-            ...func,
-            rgb: func.rgb[0].split(',').map(Number),
-            affine: func.affine[0].split(',').map(Number)
-        }));
         if (isCreating) {
             //terminate if was creating
-            console.log("Terminating...")
-            try {
-                await fetch(`http://localhost:8080/api/stop/${fractalId}`, {
-                    method: "DELETE",
-                    credentials: "include"
-                })
-            } catch (e) {
-                console.log(e)
-            }
+            terminate()
         }
         setIsCreating(true)
 
 
         console.log(JSON.stringify(fractal, null, 2))
         try {
-            const response = await fetch("http://localhost:8080/api/generate", {
+            const response = await fetch(`${server}/api/generate`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -71,27 +88,11 @@ export const ContextValidator = () => {
         }
     }
 
-    const fetchProgress = async () => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/progress/${fractalId}`,
-                {
-                    method: "GET",
-                    credentials: "include"
-                })
-            if (response.ok) {
-                const img = await response.text();
-                setFractalImage(img);
-            } else {
-                console.log(await response.text());
-            }
-        } catch (e) {
-            console.log(e)
-        }
-    }
+
 
     const onRender = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/render/${fractalId}`, {
+            const response = await fetch(`${server}/api/render/${fractalId}`, {
                 method: "POST",
                 credentials: "include"
             })
@@ -121,6 +122,7 @@ export const ContextValidator = () => {
             </button>
 
             <button
+                style={{marginRight: 10}}
                 onClick={() => {
                     setIsCreating(false)
                     setIsRendering(true)
@@ -129,6 +131,18 @@ export const ContextValidator = () => {
                 }}
             >
                 render
+            </button>
+            <br/>
+            <br/>
+            <button
+                onClick={() => {
+                    setIsRendering(false)
+                    setIsCreating(false)
+                    setIsStarted(false)
+                    terminate()
+                }}
+            >
+                stop everything
             </button>
         </div>
     )

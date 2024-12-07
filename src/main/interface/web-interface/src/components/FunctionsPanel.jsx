@@ -20,11 +20,11 @@ const variations = [
 export const FunctionsPanel = () => {
     const {functions, setFunctions} = useContext(AppContext);
 
-    const addFunction = () => {
+    const addNewFunction = () => {
         setFunctions([...functions, {
             weight: 0,
             rgb: [0, 0, 0],
-            affine: [0, 0, 0, 0, 0, 0],
+            affine: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
             variations: []
         }]);
     };
@@ -49,6 +49,50 @@ export const FunctionsPanel = () => {
         setFunctions(updatedFunctions);
     };
 
+    const getRandomInRange = (min, max) => Math.random() * (max - min) + min;
+
+    const getRandomWeightedVariations = () => {
+        const numVariations = Math.floor(getRandomInRange(0, 6));
+        const selectedVariations = [];
+
+        let totalWeight = 0;
+        for (let i = 0; i < numVariations; i++) {
+            const randomWeight = getRandomInRange(0, 1);
+            totalWeight += randomWeight;
+            selectedVariations.push({
+                weight: randomWeight,
+                name: variations[Math.floor(getRandomInRange(1, variations.length))]
+            });
+        }
+        selectedVariations.forEach(variation => {
+            variation.weight /= totalWeight;
+        });
+
+        return selectedVariations;
+    };
+
+    const addRandomFunc = () => {
+        let func = {
+            weight: parseFloat(getRandomInRange(0.0, 1.0).toFixed(2)),
+            rgb: [
+                Math.floor(getRandomInRange(0, 256)),
+                Math.floor(getRandomInRange(0, 256)),
+                Math.floor(getRandomInRange(0, 256))
+            ],
+            affine: [
+                parseFloat(getRandomInRange(-1.5, 1.5).toFixed(2)),
+                parseFloat(getRandomInRange(-1.5, 1.5).toFixed(2)),
+                parseFloat(getRandomInRange(-1.5, 1.5).toFixed(2)),
+                parseFloat(getRandomInRange(-1.5, 1.5).toFixed(2)),
+                parseFloat(getRandomInRange(-1.5, 1.5).toFixed(2)),
+                parseFloat(getRandomInRange(-1.5, 1.5).toFixed(2))
+            ],
+            variations: getRandomWeightedVariations()
+        };
+
+        setFunctions([...functions, func]);
+    };
+
     return (
         <div className="functions-scroll">
             <h2>Настройки трансформаций</h2>
@@ -64,7 +108,16 @@ export const FunctionsPanel = () => {
                     />
                 ))}
             </div>
-            <button onClick={addFunction}>Добавить функцию</button>
+            <button
+                style={{marginBottom: 10}}
+                onClick={addNewFunction}>
+                Добавить функцию
+            </button>
+            <button
+                style={{marginBottom: 10}}
+                onClick={addRandomFunc}>
+                Случайная функция
+            </button>
         </div>
     );
 }
@@ -93,6 +146,7 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                     min="0.01"
                     onChange={(e) => handleChange('weight', parseFloat(e.target.value))}
                     placeholder={"0.5"}
+                    defaultValue={funcData.weight}
                 />
             </label>
 
@@ -103,10 +157,11 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                 <input
                     type="text"
                     onChange={(e) => {
-                        const values = e.target.value.split(', ');
-                        handleChange('rgb', values);  // Обновляем состояние как массив чисел
+                        const values = e.target.value.replaceAll(" ", "").split(',').map(Number);
+                        handleChange('rgb', values);
                     }}
                     placeholder={"255, 255, 255"}
+                    defaultValue={funcData.rgb.join(', ')}
                 />
             </label>
 
@@ -117,10 +172,11 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                 <input
                     type="text"
                     onChange={(e) => {
-                        const values = e.target.value.split(', ')
+                        const values = e.target.value.replaceAll(" ", "").split(',').map(a => parseFloat(a))
                         handleChange('affine', values)
                     }}
                     placeholder={"a, b, c, d, e, f"}
+                    defaultValue={funcData.affine.join(', ')}
                 />
             </label>
 
@@ -156,6 +212,7 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                                 handleChange('variations', updatedVariations);
                             }}
                             placeholder={"0.5"}
+                            defaultValue={variation.weight}
                         />
                     </label>
 
@@ -166,10 +223,11 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
                             const updatedVars = funcData.variations
                                 .filter((_, i) => i !== vIndex)
                             handleChange('variations', updatedVars)
-                        }}>
+                        }}
+                        defaultValue={variation.name}
+                    >
                         Удалить вариацию
                     </button>
-
                     <br/>
                 </div>
             ))}

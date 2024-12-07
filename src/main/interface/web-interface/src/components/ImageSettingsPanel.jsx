@@ -14,7 +14,7 @@ export const ImageSettingsPanel = () => {
     };
 
     return (
-        <div style={{marginBottom: 10}}>
+        <div>
             <input
                 className="input-small"
                 type="number"

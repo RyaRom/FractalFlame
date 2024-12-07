@@ -25,13 +25,19 @@ function App() {
     });
     const [isCreating, setIsCreating] = useState(false);
     const [isRendering, setIsRendering] = useState(false);
+    const [fractalImage, setFractalImage] = useState("");
+    const [fractalId, setFractalId] = useState("");
+    const [profilingData, setProfilingData] = useState({});
 
     return (
         <AppContext.Provider value={{
             functions, setFunctions,
             settings, setSettings,
             isCreating, setIsCreating,
-            isRendering, setIsRendering
+            isRendering, setIsRendering,
+            fractalImage, setFractalImage,
+            fractalId, setFractalId,
+            profilingData, setProfilingData
         }}>
             <div className="app">
                 <div className="render-panel">

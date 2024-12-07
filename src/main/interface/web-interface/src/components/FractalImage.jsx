@@ -1,7 +1,21 @@
+import {useContext} from "react";
+import {AppContext} from "../App";
+
 export const FractalImage = () => {
+    const {fractalImage, setFractalImage} = useContext(AppContext);
+
+    if (fractalImage === "") return <div/>
+    if (!fractalImage.startsWith("data:image/png;base64,")) {
+        setFractalImage("data:image/png;base64," + fractalImage);
+    }
+
     return (
         <div>
-            <p>Fractal Image</p>
+            <img
+                src={fractalImage}
+                alt="Error loading pic"
+                className="pic"
+            />
         </div>
     )
 }

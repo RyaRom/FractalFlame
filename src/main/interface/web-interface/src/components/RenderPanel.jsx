@@ -3,6 +3,7 @@ import {AppContext} from "../App";
 
 export const RenderPanel = () => {
     const {setSettings, isRendering, isCreating} = useContext(AppContext)
+    const {profilingData} = useContext(AppContext);
 
     const handleCheckbox = (field) => (e) => {
         // const {checked} = e.target
@@ -19,6 +20,7 @@ export const RenderPanel = () => {
             [field]: value
         }));
     };
+
 
     return (
         <div className="render-settings">
@@ -86,6 +88,7 @@ export const RenderPanel = () => {
             {isCreating ?
                 <h4>
                     Генерация фрактала...
+                    для продолжения можно начать рендер
                 </h4> : ''
             }
             {isRendering ?
@@ -93,7 +96,27 @@ export const RenderPanel = () => {
                     Рендер...
                 </h4> : ''
             }
+            <GetStatistic
+                profilingData={profilingData}/>
 
+        </div>
+    )
+}
+
+const GetStatistic = ({profilingData}) => {
+    if (!profilingData || Object.keys(profilingData).length === 0) {
+        return <div/>
+    }
+
+    return (
+        <div>
+            <h6>Подробная статистика:</h6>
+            <div>
+                Время генерации: {profilingData["timeForGeneration"] / 1000} сек.<br/>
+                Время рендера: {profilingData["timeForRender"] / 1000} сек.<br/>
+                Количество потоков: {profilingData["threadsCount"]}<br/>
+                Конфигурация: {profilingData["config"]}<br/>
+            </div>
         </div>
     )
 }

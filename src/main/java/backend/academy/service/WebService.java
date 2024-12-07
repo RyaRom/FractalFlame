@@ -84,6 +84,9 @@ public class WebService {
     }
 
     public void terminateFractalProcessCompletely(String id) {
+        if(!fractalCache.containsProcess(id)){
+            return;
+        }
         GenerationProcess process = fractalCache.getProcess(id);
         process.genTask().cancel(true);
         process.renderTask().cancel(true);
@@ -121,6 +124,9 @@ public class WebService {
     }
 
     public String getProgress(String id) {
+        if(!fractalCache.containsProcess(id)){
+            return "";
+        }
         Fractal fractal = fractalCache.getFractal(id);
         return fractal.encode();
     }

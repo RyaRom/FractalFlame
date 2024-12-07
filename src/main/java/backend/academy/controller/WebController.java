@@ -22,23 +22,27 @@ public class WebController {
 
     @PostMapping("/generate")
     public ResponseEntity<String> generate(@RequestBody ImageSettingsDTO imageSettingsDTO) {
+        log.info("Generation starts: {}", imageSettingsDTO);
         return ResponseEntity.ok(webService.startGeneration(imageSettingsDTO));
     }
 
     // for interruption without rendering
     @DeleteMapping("stop/{id}")
     public ResponseEntity<Void> terminate(@PathVariable String id) {
+        log.info("Termination for: {}", id);
         webService.terminateFractalProcessCompletely(id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("progress/{id}")
     public ResponseEntity<String> progress(@PathVariable String id) {
+        log.info("Fetching progress for: {}", id);
         return ResponseEntity.ok(webService.getProgress(id));
     }
 
     @PostMapping("render/{id}")
     public ResponseEntity<String> render(@PathVariable String id) {
+        log.info("Rendering for: {}", id);
         webService.stopGeneration(id);
         return ResponseEntity.ok(webService.renderFractal(id));
     }

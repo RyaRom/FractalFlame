@@ -32,12 +32,12 @@ public class GenerationProcess {
 
     private Future<?> renderTask;
 
+    @SuppressWarnings("MagicNumber")
     public static GenerationProcess empty() {
-        String config = "CPUs: " +
-            Runtime.getRuntime().availableProcessors() +
-            ", Free memory: " +
-            Runtime.getRuntime().freeMemory() / (1024 * 1024) +
-            "MB";
+        String config = "CPUs: "
+            + Runtime.getRuntime().availableProcessors()
+            + ", Free memory: "
+            + Runtime.getRuntime().freeMemory() / (1024 * 1024) + "MB";
 
         return new GenerationProcess(
             0L, 0L,

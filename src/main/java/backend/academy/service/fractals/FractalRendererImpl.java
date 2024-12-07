@@ -26,7 +26,7 @@ public class FractalRendererImpl implements FractalRenderer {
         process.startTimeRender(System.currentTimeMillis());
         var functions = new RenderFactory(settings).renderFunctions();
         for (var function : functions) {
-            if (Thread.currentThread().isInterrupted()){
+            if (Thread.currentThread().isInterrupted()) {
                 break;
             }
             function.process(fractal);

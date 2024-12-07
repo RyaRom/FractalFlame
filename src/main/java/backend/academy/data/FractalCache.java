@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("singleton")
+@SuppressWarnings("MagicNumber")
 public class FractalCache {
     private final Cache<String, Fractal> fractals;
 

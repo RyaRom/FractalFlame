@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import static backend.academy.service.fractals.FractalUtil.RANDOM;
 
+@SuppressWarnings({"RecordComponentNumber", "ParameterNumber"})
 public record ImageSettings(
     int widthRes,
     int heightRes,

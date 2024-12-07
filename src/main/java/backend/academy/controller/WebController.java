@@ -1,9 +1,7 @@
 package backend.academy.controller;
 
 import backend.academy.data.webDTO.ImageSettingsDTO;
-import backend.academy.data.webDTO.ResponseDTO;
 import backend.academy.service.WebService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;

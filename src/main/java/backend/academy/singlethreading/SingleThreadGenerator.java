@@ -31,6 +31,7 @@ public class SingleThreadGenerator implements FractalGenerator {
         log.info("Fractal generated");
         complete(id);
     }
+
     private void processPointTransformations(Fractal fractal, ImageSettings settings) {
         Point current = getRandomPoint(fractal);
         for (int step = -20; step < settings.iterationsForPoint(); step++) {
@@ -43,6 +44,7 @@ public class SingleThreadGenerator implements FractalGenerator {
             drawTransformedPoint(current, settings.symmetry(), transformation.rgb(), fractal);
         }
     }
+
     private void complete(String id) {
         var process = fractalCache.getProcess(id);
         process.shutdownTimeGen(System.currentTimeMillis());

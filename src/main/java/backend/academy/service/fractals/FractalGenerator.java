@@ -2,7 +2,6 @@ package backend.academy.service.fractals;
 
 import backend.academy.data.image.Coordinates;
 import backend.academy.data.image.Fractal;
-import backend.academy.data.image.ImageSettings;
 import backend.academy.data.image.Pixel;
 import backend.academy.data.image.Point;
 import backend.academy.data.image.RGB;

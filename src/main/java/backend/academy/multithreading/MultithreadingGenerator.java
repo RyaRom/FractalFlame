@@ -14,6 +14,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @RequiredArgsConstructor
+@SuppressWarnings({"ReturnCount", "MagicNumber"})
 public class MultithreadingGenerator implements FractalGenerator {
     private final ImageSettings settings;
 
@@ -33,7 +34,7 @@ public class MultithreadingGenerator implements FractalGenerator {
                 String threadId = Thread.currentThread().getName();
                 threadIds.add(threadId);
                 if (interrupted.get()) {
-                    log.info("Generation process interrupted in multi thread mode. Shutting down...");
+//                    log.info("Generation process interrupted in multi thread mode. Shutting down...");
                     return;
                 }
                 if (Thread.currentThread().isInterrupted()) {

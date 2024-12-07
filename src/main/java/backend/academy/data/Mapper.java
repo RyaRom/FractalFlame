@@ -16,7 +16,11 @@ import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@SuppressWarnings("MagicNumber")
 public class Mapper {
+    private Mapper() {
+    }
+
     public static ImageSettings mapToImageSettings(ImageSettingsDTO dto) {
         List<IterativeFunction> iterativeFunctions = dto.functions().stream()
             .map(func -> {

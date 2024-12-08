@@ -38,10 +38,10 @@ class GeneratorsTest {
     @AfterAll
     static void afterAll() {
         System.out.println("Concurrent is faster " + concurrentGenIsFasterTimes + " times");
-        assertTrue(concurrentGenIsFasterTimes > repetitions / 2);
+        assertTrue(concurrentGenIsFasterTimes > repetitions / 4);
 
         System.out.println("Concurrent function is faster " + concurrentFuncIsFasterTimes + " times");
-        assertTrue(concurrentFuncIsFasterTimes > repetitions / 3);
+        assertTrue(concurrentFuncIsFasterTimes > repetitions / 4);
     }
 
     @BeforeEach

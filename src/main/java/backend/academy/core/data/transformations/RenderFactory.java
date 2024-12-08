@@ -15,13 +15,13 @@ import lombok.RequiredArgsConstructor;
 public class RenderFactory {
     private final ImageSettings imageSettings;
 
-    public List<PostProcessing> renderFunctions() {
+    public List<PostProcessing> renderFunctions(double gamma) {
         List<PostProcessing> functions = new ArrayList<>();
         if (imageSettings.gammaEnabled()) {
             if (imageSettings.isConcurrent()) {
-                functions.add(new GammaCorrectionConcurrent());
+                functions.add(new GammaCorrectionConcurrent(gamma));
             } else {
-                functions.add(new GammaCorrection());
+                functions.add(new GammaCorrection(gamma));
             }
         }
 

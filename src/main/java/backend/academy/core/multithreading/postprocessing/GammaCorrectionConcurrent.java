@@ -10,12 +10,18 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @SuppressWarnings("MagicNumber")
 public class GammaCorrectionConcurrent implements PostProcessing {
+    private final Double gammaVal;
+
+    public GammaCorrectionConcurrent(Double gamma) {
+        this.gammaVal = gamma;
+    }
+
     @Override
     public void process(Fractal fractal) {
         log.info("Start gamma correction");
 
         AtomicDouble max = new AtomicDouble(0.0);
-        double gamma = 2.2;
+        double gamma = gammaVal;
         IntStream.range(0, fractal.height() * fractal.width())
             .parallel()
             .forEach(i -> {

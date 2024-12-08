@@ -8,12 +8,18 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @SuppressWarnings("MagicNumber")
 public class GammaCorrection implements PostProcessing {
+    private final Double gammaVal;
+
+    public GammaCorrection(Double gammaVal) {
+        this.gammaVal = gammaVal;
+    }
+
     @Override
     public void process(Fractal fractal) {
         log.info("Start gamma correction");
 
         double max = 0.0;
-        double gamma = 2.2;
+        double gamma = gammaVal;
         for (int x = 0; x < fractal.width(); x++) {
             for (int y = 0; y < fractal.height(); y++) {
                 Pixel current = fractal.getPixel(x, y);

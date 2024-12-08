@@ -17,7 +17,7 @@ public class FractalRendererImpl implements FractalRenderer {
     public void postProcess(Fractal fractal, String id, FractalCache cache) {
         GenerationProcess process = cache.getProcess(id);
         process.startTimeRender(System.currentTimeMillis());
-        var functions = new RenderFactory(settings).renderFunctions();
+        var functions = new RenderFactory(settings).renderFunctions(settings.gamma());
         for (var function : functions) {
             if (Thread.currentThread().isInterrupted()) {
                 break;

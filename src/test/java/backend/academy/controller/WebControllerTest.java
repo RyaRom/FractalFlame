@@ -1,13 +1,9 @@
 package backend.academy.controller;
 
-import backend.academy.data.FractalCache;
-import backend.academy.data.image.Format;
-import backend.academy.data.image.Fractal;
-import backend.academy.data.webDTO.ImageSettingsDTO;
-import backend.academy.data.webDTO.IterativeFunctionDTO;
-import backend.academy.data.webDTO.VariationDTO;
-import backend.academy.service.fractals.FractalFactory;
-import backend.academy.service.fractals.FractalRenderer;
+import backend.academy.web.data.webDTO.ImageSettingsDTO;
+import backend.academy.web.data.webDTO.IterativeFunctionDTO;
+import backend.academy.web.data.webDTO.VariationDTO;
+import backend.academy.core.fractals.FractalFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -121,21 +117,14 @@ class WebControllerTest {
         );
 
         when(fractalFactory.renderer(any())).thenReturn(
-            new FractalRenderer() {
-                @Override
-                public void postProcess(Fractal fractal, String id, FractalCache cache) {
-                    for (int i = 0; i < 10; i++) {
-                        System.out.println("Rendering...  " + i);
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            return;
-                        }
+            (fractal, id, cache) -> {
+                for (int i = 0; i < 10; i++) {
+                    System.out.println("Rendering...  " + i);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        return;
                     }
-                }
-
-                @Override
-                public void saveAs(Fractal fractal, String path, String name, Format format) {
                 }
             }
         );

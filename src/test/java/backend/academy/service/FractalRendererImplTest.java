@@ -1,11 +1,8 @@
 package backend.academy.service;
 
-import backend.academy.data.image.Format;
-import backend.academy.data.image.Fractal;
-import backend.academy.service.fractals.FractalRendererImpl;
-import backend.academy.singlethreading.postprocessing.BlurCorrection;
-import backend.academy.singlethreading.postprocessing.GammaCorrection;
-import backend.academy.singlethreading.postprocessing.HeatMap;
+import backend.academy.core.data.image.Format;
+import backend.academy.core.data.image.Fractal;
+import backend.academy.core.fractals.FractalUtil;
 import java.io.File;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -18,9 +15,8 @@ class FractalRendererImplTest {
         String path = "./";
         String name = "test";
         Fractal fractal = Fractal.of(100, 100, 1.0);
-        FractalRendererImpl renderer = new FractalRendererImpl(null);
         for (Format format : Format.values()) {
-            renderer.saveAs(fractal, path, name, format);
+            FractalUtil.saveAs(fractal, path, name, format);
             File created = new File(
                 path + "/" + name + "." + format.toString().toLowerCase());
             assertTrue(created.exists());

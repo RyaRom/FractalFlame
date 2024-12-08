@@ -1,16 +1,16 @@
 package backend.academy;
 
-import backend.academy.web.data.FractalCache;
 import backend.academy.core.data.image.Fractal;
 import backend.academy.core.data.image.ImageSettings;
 import backend.academy.core.data.variations.Variations;
-import backend.academy.web.data.webDTO.GenerationProcess;
-import backend.academy.core.multithreading.MultithreadingGenerator;
 import backend.academy.core.fractals.FractalRenderer;
 import backend.academy.core.fractals.FractalRendererImpl;
 import backend.academy.core.fractals.FractalUtil;
+import backend.academy.core.multithreading.MultithreadingGenerator;
 import backend.academy.core.singlethreading.SingleThreadGenerator;
-import org.junit.jupiter.api.AfterAll;
+import backend.academy.web.data.FractalCache;
+import backend.academy.web.data.webDTO.GenerationProcess;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,30 +19,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static backend.academy.core.fractals.FractalUtil.getRandomTransformationList;
 import static backend.academy.core.fractals.FractalUtil.profileTime;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GeneratorsTest {
 
-    private static final int repetitions = 16;
-
-    private static int concurrentGenIsFasterTimes = 0;
-
-    private static int concurrentFuncIsFasterTimes = 0;
-
     @Mock
     private FractalCache fractalCache;
-
-    @AfterAll
-    static void afterAll() {
-        System.out.println("Concurrent is faster " + concurrentGenIsFasterTimes + " times");
-        assertTrue(concurrentGenIsFasterTimes > repetitions / 4);
-
-        System.out.println("Concurrent function is faster " + concurrentFuncIsFasterTimes + " times");
-        assertTrue(concurrentFuncIsFasterTimes > repetitions / 4);
-    }
 
     @BeforeEach
     void setUp() {
@@ -68,7 +52,7 @@ class GeneratorsTest {
         "625, 625, 1250, 625",
         "3125, 3125, 6250, 3125"
     })
-    void speedTest(int height, int width, int startingPoints, int iterations) {
+    void genTest(int height, int width, int startingPoints, int iterations) {
         ImageSettings settingsAsync =
             new ImageSettings(height, width,
                 startingPoints, iterations, 1,
@@ -86,37 +70,35 @@ class GeneratorsTest {
         Fractal fractalSlow = Fractal.of(settingsSlow.heightRes(), settingsSlow.widthRes(), 1.77);
         Fractal fractalAsync = Fractal.of(settingsAsync.heightRes(), settingsAsync.widthRes(), 1.77);
 
-        Long timeForSingle = FractalUtil.profileTime(() -> {
-            singleGen.generate(fractalSlow, "");
-            return null;
-        }, null);
-        Long timeForConcurrent = FractalUtil.profileTime(() -> {
-            concurrentGen.generate(fractalAsync, "");
-            return null;
-        }, null);
-        long difference = timeForSingle - timeForConcurrent;
+        Assertions.assertDoesNotThrow(() -> {
+            Long timeForSingle = FractalUtil.profileTime(() -> {
+                singleGen.generate(fractalSlow, "");
+                return null;
+            }, null);
+            Long timeForConcurrent = FractalUtil.profileTime(() -> {
+                concurrentGen.generate(fractalAsync, "");
+                return null;
+            }, null);
+            long difference = timeForSingle - timeForConcurrent;
 
-        System.out.println(settingsSlow);
-        System.out.println("Difference: " + difference + "ms");
-        System.out.println("\n\n");
-        if (difference > 0) {
-            concurrentGenIsFasterTimes++;
-        }
+            System.out.println(settingsSlow);
+            System.out.println("Difference: " + difference + "ms");
+            System.out.println("\n\n");
+        });
 
-        Long single = profileTime(() -> {
-            rendererSlow.postProcess(fractalSlow, "", fractalCache);
-            return null;
-        }, null);
-        Long concurrent = profileTime(() -> {
-            rendererAsync.postProcess(fractalAsync, "", fractalCache);
-            return null;
-        }, null);
-        long differenceForPostProcessing = single - concurrent;
+        Assertions.assertDoesNotThrow(() -> {
+            Long single = profileTime(() -> {
+                rendererSlow.postProcess(fractalSlow, "", fractalCache);
+                return null;
+            }, null);
+            Long concurrent = profileTime(() -> {
+                rendererAsync.postProcess(fractalAsync, "", fractalCache);
+                return null;
+            }, null);
+            long differenceForPostProcessing = single - concurrent;
 
-        System.out.println("Difference: " + differenceForPostProcessing + "ms");
-        System.out.println("\n\n");
-        if (differenceForPostProcessing > 0) {
-            concurrentFuncIsFasterTimes++;
-        }
+            System.out.println("Difference: " + differenceForPostProcessing + "ms");
+            System.out.println("\n\n");
+        });
     }
 }

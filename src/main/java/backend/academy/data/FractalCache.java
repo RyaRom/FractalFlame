@@ -19,13 +19,13 @@ public class FractalCache {
 
     public FractalCache() {
         this.fractals = Caffeine.newBuilder()
-            .maximumSize(1_000_00)
-            .expireAfterWrite(30, TimeUnit.MINUTES)
+            .maximumSize(1000)
+            .expireAfterWrite(15, TimeUnit.MINUTES)
             .build();
 
         this.processes = Caffeine.newBuilder()
-            .maximumSize(1_000_00)
-            .expireAfterWrite(30, TimeUnit.MINUTES)
+            .maximumSize(1000)
+            .expireAfterWrite(15, TimeUnit.MINUTES)
             .build();
     }
 

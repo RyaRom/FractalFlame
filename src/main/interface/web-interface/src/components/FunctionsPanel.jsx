@@ -183,7 +183,7 @@ const FunctionFields = ({index, funcData, updateFunction, addVariation, deleteFu
             <h4>Variations</h4>
             {funcData.variations.map((variation, vIndex) => (
                 <div key={vIndex} style={{marginBottom: '10px'}}>
-                    <label>
+                    <label className="variation-label">
                         Type:
                         <select
                             defaultValue={variation.name}

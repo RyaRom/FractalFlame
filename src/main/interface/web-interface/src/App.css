@@ -27,6 +27,12 @@
     justify-content: center;
 }
 
+.variation-label select{
+    background-color: #1b1b1b;
+    color: #d4d4d4;
+    font-family: 'Cinzel', serif;
+}
+
 .render-panel {
     height: 80%;
     position: absolute;

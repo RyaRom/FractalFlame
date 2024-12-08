@@ -10,10 +10,8 @@ import backend.academy.data.webDTO.ResponseDTO;
 import backend.academy.service.fractals.FractalFactory;
 import backend.academy.service.fractals.FractalGenerator;
 import backend.academy.service.fractals.FractalRenderer;
-import backend.academy.service.fractals.FractalRendererImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -32,12 +30,14 @@ public class WebService {
 
     private final ExecutorService executorService;
 
-    private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    private final FractalFactory fractalFactory;
+
+    private final ObjectMapper objectMapper;
 
     public String startGeneration(ImageSettingsDTO imageSettingsDTO) {
         ImageSettings settings = Mapper.mapToImageSettings(imageSettingsDTO);
-        FractalGenerator generator = new FractalFactory(settings, fractalCache).generator();
-        FractalRenderer renderer = new FractalRendererImpl(settings);
+        FractalGenerator generator = fractalFactory.generator(settings);
+        FractalRenderer renderer = fractalFactory.renderer(settings);
         Fractal fractal = Fractal.of(settings.heightRes(), settings.widthRes(), settings.depth());
         String id = fractalCache.generateId();
         fractalCache.cacheFractal(id, fractal);
@@ -79,6 +79,9 @@ public class WebService {
     }
 
     public void stopGeneration(String id) {
+        if (!fractalCache.containsFractal(id)) {
+            return;
+        }
         GenerationProcess process = fractalCache.getProcess(id);
         process.genTask().cancel(true);
     }
@@ -96,17 +99,19 @@ public class WebService {
     }
 
     public String renderFractal(String id) {
+        if (!fractalCache.containsFractal(id)) {
+            throw new IllegalArgumentException();
+        }
         GenerationProcess process = fractalCache.getProcess(id);
         Fractal fractal = fractalCache.getFractal(id);
         try {
             var generation = process.genTask();
             log.info("isDone: {}", generation.isDone());
             log.info("isCancelled: {}", generation.isCancelled());
-            if (generation.isDone() || generation.isCancelled()) {
-                process.renderTask().get();
-            } else {
+            if (!generation.isDone() && !generation.isCancelled()) {
                 generation.cancel(true);
             }
+            process.renderTask().get();
         } catch (InterruptedException | ExecutionException | CancellationException e) {
             //new image is creating
             return null;
@@ -115,7 +120,7 @@ public class WebService {
         //weird deserialization error
         ResponseDTO responseDTO = toResponse(process, fractal.encode());
         try {
-            return mapper.writeValueAsString(responseDTO);
+            return objectMapper.writeValueAsString(responseDTO);
         } catch (JsonProcessingException e) {
             log.error("json error {}", e.getMessage());
         }
@@ -125,7 +130,7 @@ public class WebService {
 
     public String getProgress(String id) {
         if (!fractalCache.containsProcess(id)) {
-            return "";
+            throw new IllegalArgumentException();
         }
         Fractal fractal = fractalCache.getFractal(id);
         return fractal.encode();

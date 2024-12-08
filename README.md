@@ -19,7 +19,7 @@ docker ps
 #### 2. Клонирование репозитория
 
 ```bash
-git clone https://github.com/RyaRom/backend_academy_2024_project_4-java-RyaRom
+git clone https://github.com/RyaRom/FractalFlame
 ```
 
 ```bash

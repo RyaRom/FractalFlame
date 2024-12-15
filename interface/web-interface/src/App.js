@@ -5,7 +5,7 @@ import {FunctionsPanel} from "./components/FunctionsPanel";
 import {ImageSettingsPanel} from "./components/ImageSettingsPanel";
 import {FractalImage} from "./components/FractalImage";
 
-export const server = "http://backend:8080";
+export const server = "http://127.0.0.1:8080";
 
 export const AppContext = React.createContext({});
 

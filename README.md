@@ -4,7 +4,7 @@
 
 ## Установка
 
-#### 1. Скачивание [Docker](https://www.docker.com/get-started)
+#### 1. При необходимости нужно установить [Docker](https://www.docker.com/get-started)
 
 *Проверка работы*
 ```bash
